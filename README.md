@@ -1,11 +1,11 @@
 # SaaS Boilerplate
 
-Boilerplate full-stack TypeScript pour applications SaaS avec une architecture Next.js moderne.
+La boilerplate Next.js avec tout ce dont vous avez besoin pour créer votre SaaS, votre outil d'IA ou toute autre application web.
 
 ## Stack Technique
 
 - **Framework** : Next.js 16 (App Router) + React 19
-- **UI** : shadcn/ui + Tailwind CSS 4
+- **UI** : shadcn/ui + Tailwind CSS v4
 - **Base de données** : Neon PostgreSQL + Drizzle ORM
 - **Authentification** : Better Auth (Google OAuth, Magic Link)
 - **Formulaires** : React Hook Form + Zod
