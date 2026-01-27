@@ -16,15 +16,19 @@ const Logo = () => {
 	);
 };
 
-export const Nav = () => {
+interface MenuItem {
+	name: string;
+	href: string;
+}
+
+interface NavProps {
+	menuItems?: MenuItem[];
+}
+
+export const Nav = ({ menuItems = [] }: NavProps) => {
 	const [menuState, setMenuState] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
-
-	const menuItems = [
-		{ name: "features", href: "#features" },
-		{ name: "pricing", href: "#pricing" },
-		{ name: "guides", href: "#guides" },
-	];
+	const hasMenuItems = menuItems.length > 0;
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -33,6 +37,7 @@ export const Nav = () => {
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
+
 	return (
 		<header>
 			<nav
@@ -58,7 +63,7 @@ export const Nav = () => {
 
 							<button
 								onClick={() => setMenuState(!menuState)}
-								aria-label={menuState == true ? "Close Menu" : "Open Menu"}
+								aria-label={menuState === true ? "Close Menu" : "Open Menu"}
 								className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
 							>
 								<Menu className="in-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
@@ -66,28 +71,14 @@ export const Nav = () => {
 							</button>
 						</div>
 
-						<div className="absolute inset-0 m-auto hidden size-fit lg:block">
-							{/* <ul className="flex gap-8 text-md">
-                                {menuItems.map((item, index) => (
-                                    <li key={index}>
-                                        <Link
-                                            href={item.href}
-                                            className="text-foreground/80 hover:text-foreground block duration-150">
-                                            <span>{item.name}</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul> */}
-						</div>
-
-						<div className="bg-background group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
-							<div className="hidden">
-								<ul className="space-y-6 text-base">
+						{hasMenuItems && (
+							<div className="absolute inset-0 m-auto hidden size-fit lg:block">
+								<ul className="flex gap-8 text-md">
 									{menuItems.map((item, index) => (
 										<li key={index}>
 											<Link
 												href={item.href}
-												className="text-muted-foreground hover:text-accent-foreground block duration-150"
+												className="text-foreground/80 hover:text-foreground block duration-150"
 											>
 												<span>{item.name}</span>
 											</Link>
@@ -95,15 +86,34 @@ export const Nav = () => {
 									))}
 								</ul>
 							</div>
+						)}
+
+						<div className="bg-background group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
+							{hasMenuItems && (
+								<div className="w-full lg:hidden">
+									<ul className="space-y-6 text-base">
+										{menuItems.map((item, index) => (
+											<li key={index}>
+												<Link
+													href={item.href}
+													className="text-muted-foreground hover:text-accent-foreground block duration-150"
+												>
+													<span>{item.name}</span>
+												</Link>
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
 							<div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
 								<Button asChild size="sm" variant="outline">
-									<Link href="/login">
-										<span>Connexion</span>
+									<Link href="/auth">
+										<span>Login</span>
 									</Link>
 								</Button>
 								<Button asChild size="sm">
-									<Link href="/login">
-										<span>Essayer gratuitement</span>
+									<Link href="/auth">
+										<span>Try for free</span>
 									</Link>
 								</Button>
 							</div>
