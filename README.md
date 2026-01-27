@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SaaS Boilerplate
 
-## Getting Started
+Boilerplate full-stack TypeScript pour applications SaaS avec une architecture Next.js moderne.
 
-First, run the development server:
+## Stack Technique
+
+- **Framework** : Next.js 16 (App Router) + React 19
+- **UI** : shadcn/ui + Tailwind CSS 4
+- **Base de données** : Neon PostgreSQL + Drizzle ORM
+- **Authentification** : Better Auth (Google OAuth, Magic Link)
+- **Formulaires** : React Hook Form + Zod
+- **State** : Server Components first, Zustand/TanStack Query si nécessaire
+
+## Démarrage
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Zones de l'application
 
-## Learn More
+| Zone | Description | Layout |
+|------|-------------|--------|
+| `(public)` | Pages publiques | Sans auth |
+| `(app)` | Espace client | Avec/sans sidebar |
+| `(admin)` | Administration | Sidebar admin |
 
-To learn more about Next.js, take a look at the following resources:
+### Auth & Authorization
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Séparation claire entre authentification et autorisation :
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Auth** : Gestion de session (Better Auth)
+- **Authorization** : Contrôle d'accès via helpers
+  - `requireAuth()` - Vérifie l'authentification
+  - `requireRole("admin")` - Vérifie le rôle
+  - `canAccessFeature("X")` - Vérifie les feature flags
 
-## Deploy on Vercel
+### Rôles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `admin` - Accès complet + dashboard admin
+- `user` - Utilisateur standard
+- `beta` - Accès aux fonctionnalités beta
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Plans & Crédits
+
+Système de crédits transactionnel avec historique complet :
+
+| Plan | Crédits |
+|------|---------|
+| Free | Limité |
+| Basic | Standard |
+| Pro | Élevé |
+| Admin | Illimité |
+
+Chaque opération crée une transaction (+X ou -X) pour audit.
+
+### Feature Flags
+
+Activation granulaire par utilisateur, gérable depuis le panel admin.
+
+## Structure
+
+```
+src/
+├── app/
+│   ├── (public)/          # Pages publiques
+│   ├── (app)/             # Espace authentifié
+│   │   ├── (with-sidebar)/
+│   │   └── (without-sidebar)/
+│   └── (admin)/           # Administration
+├── components/ui/         # shadcn/ui
+├── lib/
+│   ├── auth/              # Better Auth + guards
+│   └── db/                # Drizzle schemas
+└── hooks/
+```
+
+## Principes
+
+- Server Components par défaut
+- Server Actions pour les mutations (pas d'API routes)
+- Logging minimal : erreurs et événements critiques uniquement
+- Gestion d'erreurs fine et contrôlée
