@@ -9,12 +9,12 @@ import {
 	SidebarContent,
 	SidebarFooter,
 	SidebarHeader,
-} from "@/components/ui/sidebar";
+} from "@/shared/components/ui/sidebar";
 import {
 	SidebarMenu,
 	SidebarMenuItem,
 	SidebarMenuButton,
-} from "@/components/ui/sidebar";
+} from "@/shared/components/ui/sidebar";
 import Link from "next/link";
 
 type User = {

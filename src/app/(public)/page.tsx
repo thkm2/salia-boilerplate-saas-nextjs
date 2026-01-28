@@ -1,5 +1,5 @@
-import { Nav } from "@/components/features/landing-page/nav";
-import { Footer } from "@/components/features/landing-page/footer";
+import { Nav } from "@/shared/components/landing/nav";
+import { Footer } from "@/shared/components/landing/footer";
 
 const LandingPage = () => {
 	return (

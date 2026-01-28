@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Users, Activity } from "lucide-react";
 import {
 	getTotalUsers,
@@ -7,13 +7,11 @@ import {
 	getUserGrowth,
 	getRecentUsers,
 	getRecentCreditActions,
-} from "@/lib/queries/admin/dashboard";
-import {
-	PlanDistributionChart,
-	UserGrowthChart,
-	RecentUsersList,
-	CreditActionsList,
-} from "@/components/features/admin-dashboard";
+} from "./data";
+import { PlanDistributionChart } from "./_components/plan-distribution-chart";
+import { UserGrowthChart } from "./_components/user-growth-chart";
+import { RecentUsersList } from "./_components/recent-users-list";
+import { CreditActionsList } from "./_components/credit-actions-list";
 
 const AdminDashboardPage = async () => {
 	// Fetch all data in parallel

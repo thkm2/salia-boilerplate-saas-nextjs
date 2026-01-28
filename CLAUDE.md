@@ -35,26 +35,48 @@ Keep it simple and production-ready. Write the minimum code needed. Optimize onl
 4. **Zustand** - Only for complex client state that can't be URL/server-driven
 
 ### Code Organization
+
+**Core Principle: Colocation**
+- Code specific to ONE route → Lives IN that route (`app/[route]/`)
+- Code shared across 2+ routes → Lives in `/shared`
+- Infrastructure (DB, Auth) → Lives in `/lib`
+
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── (public)/          # Public pages (no auth)
-│   ├── (app)/             # Authenticated client area
-│   │   ├── (with-sidebar)/
-│   │   └── (without-sidebar)/
-│   └── (admin)/           # Admin-only area
-├── components/
-│   └── ui/                # shadcn/ui components
-├── lib/
-│   ├── auth/              # Better Auth setup
-│   │   ├── auth.ts        # Auth config (Google OAuth, Magic Link)
-│   │   └── guards.ts      # requireAuth(), requireRole(), canAccessFeature()
-│   ├── db/                # Drizzle ORM
-│   │   ├── schema/        # DB schemas
-│   │   └── index.ts       # DB client
-│   └── utils.ts           # cn() helper
-└── hooks/                 # React hooks
+├── app/                           # Next.js App Router
+│   ├── (public)/                  # Public pages (no auth)
+│   ├── (app)/                     # Authenticated client area
+│   └── admin/
+│       └── dashboard/
+│           ├── page.tsx           # Route component
+│           ├── data.ts            # Queries (Server-side reads)
+│           ├── actions.ts         # Actions (local mutations)
+│           └── _components/       # Private components
+│
+├── shared/                        # Code reused across routes
+│   ├── actions/                   # Server Actions (mutations)
+│   ├── components/                # Reusable components
+│   │   ├── ui/                    # shadcn/ui components
+│   │   └── landing/               # Landing page components
+│   ├── hooks/                     # Custom React hooks
+│   └── utils/                     # Business logic utilities
+│
+└── lib/                           # Technical infrastructure
+    ├── auth/                      # Better Auth
+    │   ├── auth.ts                # Auth config (Google OAuth, Magic Link)
+    │   └── guards.ts              # requireAuth(), requireRole()
+    ├── db/                        # Drizzle ORM
+    │   ├── schema/                # DB schemas
+    │   └── index.ts               # DB client
+    └── utils.ts                   # Generic utilities (cn, etc.)
 ```
+
+**Decision Tree:**
+1. Used in 1 route? → `app/[route]/`
+2. Infrastructure (DB/Auth)? → `lib/`
+3. Shared business code? → `shared/`
+
+**📖 For detailed architecture guidelines, see [md/ARCHITECTURE.md](md/ARCHITECTURE.md)**
 
 ### Auth vs Authorization Pattern
 - **Auth** (`lib/auth/auth.ts`): Who is connected - Better Auth handles session
@@ -88,10 +110,16 @@ Keep error handling precise and controlled.
 ## Path Aliases
 
 ```typescript
-@/components  // src/components
-@/lib         // src/lib
-@/hooks       // src/hooks
-@/components/ui  // src/components/ui (shadcn)
+@/*               // src/*
+@/shared/*        // src/shared/*
+@/lib/*           // src/lib/*
+```
+
+**Usage:**
+```typescript
+import { grantCredits } from "@/shared/actions/credits"
+import { db } from "@/lib/db"
+import { Button } from "@/shared/components/ui/button"
 ```
 
 ## Adding shadcn Components

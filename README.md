@@ -67,18 +67,32 @@ Activation granulaire par utilisateur, gérable depuis le panel admin.
 
 ```
 src/
-├── app/
-│   ├── (public)/          # Pages publiques
-│   ├── (app)/             # Espace authentifié
+├── app/                           # Next.js App Router
+│   ├── (public)/                  # Pages publiques
+│   ├── (app)/                     # Espace authentifié
 │   │   ├── (with-sidebar)/
 │   │   └── (without-sidebar)/
-│   └── (admin)/           # Administration
-├── components/ui/         # shadcn/ui
-├── lib/
-│   ├── auth/              # Better Auth + guards
-│   └── db/                # Drizzle schemas
-└── hooks/
+│   └── admin/
+│       └── dashboard/
+│           ├── page.tsx           # Route
+│           ├── data.ts            # Queries
+│           └── _components/       # Components privés
+│
+├── shared/                        # Code réutilisable
+│   ├── actions/                   # Server Actions
+│   ├── components/
+│   │   ├── ui/                    # shadcn/ui
+│   │   └── landing/               # Landing page
+│   ├── hooks/                     # Custom hooks
+│   └── utils/                     # Utils métier
+│
+└── lib/                           # Infrastructure
+    ├── auth/                      # Better Auth + guards
+    ├── db/                        # Drizzle schemas
+    └── utils.ts                   # Utils génériques
 ```
+
+**📖 Voir [md/ARCHITECTURE.md](md/ARCHITECTURE.md) pour le guide complet**
 
 ## Principes
 

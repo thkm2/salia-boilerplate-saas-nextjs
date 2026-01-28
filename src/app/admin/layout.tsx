@@ -1,6 +1,6 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/shared/components/ui/sidebar";
 import { AppSidebar } from "./_side-bar/side-bar";
-import { SidebarInset } from "@/components/ui/sidebar";
+import { SidebarInset } from "@/shared/components/ui/sidebar";
 import NavTrigger from "./_side-bar/nav-trigger";
 import { getSession } from "@/lib/auth/guards";
 import { redirect } from "next/navigation";

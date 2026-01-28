@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/shared/components/ui/sidebar"
 import { usePathname } from "next/navigation"
 
 export function NavSecondary({
