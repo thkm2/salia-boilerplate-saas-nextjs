@@ -55,7 +55,7 @@ export function AppSidebar({ user, ...sidebarProps }: AppSidebarProps) {
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton size="lg" asChild>
-							<Link href="/">
+							<Link href="/dashboard">
 								<div className="bg-foreground text-background flex aspect-square size-8 items-center justify-center rounded-lg">
 									<CircleDashed strokeWidth={2.5} className="size-4" />
 								</div>

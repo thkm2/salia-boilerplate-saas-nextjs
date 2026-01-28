@@ -25,6 +25,9 @@ pnpm lint         # Run ESLint
 
 This is a SaaS boilerplate. Follow these patterns:
 
+### Philosophy: Essential Over Overkill
+Keep it simple and production-ready. Write the minimum code needed. Optimize only when there's a real performance issue. Three similar lines is better than a premature abstraction.
+
 ### Data Flow Priority
 1. **Server Components** - Default for all components
 2. **Server Actions** - Primary data mutations, avoid API routes

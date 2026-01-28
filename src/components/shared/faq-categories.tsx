@@ -10,7 +10,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { SectionContainer } from "@/components/ui/section-container";
 import Link from "next/link";
 
 interface FaqSectionWithCategoriesProps extends React.HTMLAttributes<HTMLElement> {
@@ -32,9 +31,8 @@ interface FaqSectionWithCategoriesProps extends React.HTMLAttributes<HTMLElement
 const FaqSectionWithCategories = React.forwardRef<HTMLElement, FaqSectionWithCategoriesProps>(
   ({ className, title, description, items, contactInfo, ...props }, ref) => {
     return (
-      <SectionContainer
-        as="section"
-        ref={ref as React.Ref<HTMLDivElement>}
+      <section
+        ref={ref}
         className={cn("py-10 lg:py-14 max-w-4xl", className)}
         {...props}
       >
@@ -108,7 +106,7 @@ const FaqSectionWithCategories = React.forwardRef<HTMLElement, FaqSectionWithCat
                 </Button>
               </div>
             )}
-      </SectionContainer>
+      </section>
     );
   }
 );

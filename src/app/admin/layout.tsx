@@ -16,9 +16,9 @@ export default async function AppWithSidebarLayout({
 		redirect("/auth");
 	}
 
-	// if (session.user.role !== "admin") {
-	// 	redirect("/dashboard");
-	// }
+	if (session.user.role !== "admin") {
+		redirect("/dashboard");
+	}
 
 	const user = {
 		name: session?.user?.name || "Name",
