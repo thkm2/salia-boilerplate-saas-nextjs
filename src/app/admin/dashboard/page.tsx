@@ -74,7 +74,7 @@ const AdminDashboardPage = async () => {
 			{/* Plan Distribution & User Growth */}
 			<div className="grid gap-4 md:grid-cols-2">
 				{/* Plan Distribution */}
-				<Card>
+				<Card className="min-w-0">
 					<CardHeader>
 						<CardTitle>Plan Distribution</CardTitle>
 						<p className="text-sm text-muted-foreground">Users by plan type</p>
@@ -85,7 +85,7 @@ const AdminDashboardPage = async () => {
 				</Card>
 
 				{/* User Growth */}
-				<Card>
+				<Card className="min-w-0">
 					<CardHeader>
 						<CardTitle>User Growth</CardTitle>
 						<p className="text-sm text-muted-foreground">

@@ -27,7 +27,7 @@ interface PlanDistributionChartProps {
 
 export function PlanDistributionChart({ data }: PlanDistributionChartProps) {
 	return (
-		<ChartContainer config={chartConfig} className="h-[300px] w-full">
+		<ChartContainer config={chartConfig} className="h-[250px] w-full sm:h-[300px]">
 			<BarChart data={data}>
 				<CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
 				<XAxis
