@@ -2,11 +2,11 @@
 import * as React from "react"
 import {
   Users,
-  HomeIcon,
-	CircleDashed
+  BrickWallShield,
+	CircleDashed,
 } from "lucide-react"
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
+import { NavMain } from "@/shared/components/sidebar/nav-main"
+import { NavSecondary } from "@/shared/components/sidebar/nav-secondary"
 import { NavUser } from "./nav-user"
 import {
   Sidebar,
@@ -32,7 +32,7 @@ const data = {
     {
       title: "Dashboard",
       url: "/admin/dashboard",
-      icon: HomeIcon,
+      icon: BrickWallShield,
 	  },
 	  {
       title: "Users",

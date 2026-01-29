@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/shared/components/ui/sidebar";
 import { AppSidebar } from "./_side-bar/side-bar";
 import { SidebarInset } from "@/shared/components/ui/sidebar";
-import NavTrigger from "./_side-bar/nav-trigger";
+import NavTrigger from "@/shared/components/sidebar/nav-trigger";
 import { getSession } from "@/lib/auth/guards";
 import { redirect } from "next/navigation";
 
@@ -31,7 +31,7 @@ export default async function AppWithSidebarLayout({
 			<AppSidebar user={user} />
 			<SidebarInset>
 				<div className="p-3">
-					<NavTrigger />
+					<NavTrigger hiddenSegments={["admin"]} iconOverrides={{ dashboard: "brick-wall-shield" }} />
 					<div className="px-6">{children}</div>
 				</div>
 			</SidebarInset>

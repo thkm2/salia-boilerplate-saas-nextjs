@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/shared/components/ui/sidebar";
 import { AppSidebar } from "./_side-bar/side-bar";
 import { SidebarInset } from "@/shared/components/ui/sidebar";
-import NavTrigger from "./_side-bar/nav-trigger";
+import NavTrigger from "@/shared/components/sidebar/nav-trigger";
 import { getSession } from "@/lib/auth/guards";
 
 export default async function AppWithSidebarLayout({

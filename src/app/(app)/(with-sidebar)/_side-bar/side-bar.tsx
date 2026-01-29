@@ -1,8 +1,8 @@
 "use client";
 import * as React from "react";
-import { List, HomeIcon, CircleDashed, BadgeQuestionMark } from "lucide-react";
-import { NavMain } from "./nav-main";
-import { NavSecondary } from "./nav-secondary";
+import { List, LayoutDashboard, CircleDashed, BadgeQuestionMark } from "lucide-react";
+import { NavMain } from "@/shared/components/sidebar/nav-main";
+import { NavSecondary } from "@/shared/components/sidebar/nav-secondary";
 import { NavUser } from "./nav-user";
 import {
 	Sidebar,
@@ -32,7 +32,7 @@ const data = {
 		{
 			title: "Dashboard",
 			url: "/dashboard",
-			icon: HomeIcon,
+			icon: LayoutDashboard,
 		},
 		{
 			title: "Page",
