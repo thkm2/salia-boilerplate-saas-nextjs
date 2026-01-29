@@ -107,9 +107,9 @@ export const getUserGrowth = cache(async (): Promise<
 });
 
 /**
- * Get recent users (last 5)
+ * Get recent users (last 20 by default)
  */
-export const getRecentUsers = cache(async (): Promise<
+export const getRecentUsers = cache(async (limit: number = 20): Promise<
 	{
 		id: string;
 		name: string;
@@ -129,7 +129,7 @@ export const getRecentUsers = cache(async (): Promise<
 		})
 		.from(user)
 		.orderBy(desc(user.createdAt))
-		.limit(5);
+		.limit(limit);
 
 	return users.map((u) => {
 		const isPaid = u.plan !== "free";
@@ -159,9 +159,9 @@ export const getRecentUsers = cache(async (): Promise<
 });
 
 /**
- * Get recent credit actions (last 5)
+ * Get recent credit actions (last 20 by default)
  */
-export const getRecentCreditActions = cache(async (): Promise<
+export const getRecentCreditActions = cache(async (limit: number = 20): Promise<
 	{
 		id: string;
 		user: string;
@@ -182,7 +182,7 @@ export const getRecentCreditActions = cache(async (): Promise<
 		.from(creditTransaction)
 		.innerJoin(user, eq(creditTransaction.userId, user.id))
 		.orderBy(desc(creditTransaction.createdAt))
-		.limit(5);
+		.limit(limit);
 
 	return transactions.map((t) => {
 		const now = new Date();

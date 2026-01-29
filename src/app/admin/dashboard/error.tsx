@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { AlertCircle } from "lucide-react";
+import { DashboardHeader } from "./_components/dashboard-header";
 
 export default function Error({
 	error,
@@ -17,13 +18,8 @@ export default function Error({
 	}, [error]);
 
 	return (
-		<div className="space-y-8 py-6">
-			<div>
-				<h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-				<p className="text-muted-foreground mt-1">
-					Overview of your platform metrics
-				</p>
-			</div>
+		<div className="space-y-8 pb-6">
+			<DashboardHeader />
 
 			<Card className="border-destructive">
 				<CardHeader>

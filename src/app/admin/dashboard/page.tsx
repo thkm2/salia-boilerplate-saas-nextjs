@@ -12,6 +12,7 @@ import { PlanDistributionChart } from "./_components/plan-distribution-chart";
 import { UserGrowthChart } from "./_components/user-growth-chart";
 import { RecentUsersList } from "./_components/recent-users-list";
 import { CreditActionsList } from "./_components/credit-actions-list";
+import { DashboardHeader } from "./_components/dashboard-header";
 
 const AdminDashboardPage = async () => {
 	// Fetch all data in parallel
@@ -32,14 +33,8 @@ const AdminDashboardPage = async () => {
 	]);
 
 	return (
-		<div className="space-y-8 py-6">
-			{/* Header */}
-			<div>
-				<h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-				<p className="text-muted-foreground mt-1">
-					Overview of your platform metrics
-				</p>
-			</div>
+		<div className="space-y-8 pb-6">
+			<DashboardHeader />
 
 			{/* Stats Cards */}
 			<div className="grid gap-4 md:grid-cols-2">
