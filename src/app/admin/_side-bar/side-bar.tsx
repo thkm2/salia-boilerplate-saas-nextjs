@@ -1,9 +1,9 @@
 "use client"
 import * as React from "react"
 import {
-  ClipboardType,
+  Users,
   HomeIcon,
-  CircleDashed
+	CircleDashed
 } from "lucide-react"
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
@@ -35,9 +35,9 @@ const data = {
       icon: HomeIcon,
 	  },
 	  {
-      title: "Form",
-      url: "/admin/form",
-      icon: ClipboardType,
+      title: "Users",
+      url: "/admin/users",
+      icon: Users,
 	  },
   ],
   /* navSecondary: [
