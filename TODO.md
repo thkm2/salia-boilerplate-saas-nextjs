@@ -1,6 +1,6 @@
 
 [X] - Feature flag crud
-[] - Plans + crédits (conso et affichage)
+[X] - Plans + crédits (conso et affichage)
 [] - Stripe
 [] - Magic link
 [] - Settings/profile
