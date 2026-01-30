@@ -35,7 +35,7 @@ export function Pagination({
 	return (
 		<div className="flex items-center justify-between">
 			<p className="text-sm text-muted-foreground">
-				Page {page} of {totalPages} ({total.toLocaleString()} users)
+				Page {page} of {totalPages} ({total.toLocaleString("en-US")} users)
 			</p>
 			<div className="flex items-center gap-2">
 				<Button

@@ -9,6 +9,7 @@ import {
 	UserCircleIcon,
 	CreditCardIcon,
 	SettingsIcon,
+	BrickWallShieldIcon,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
@@ -39,6 +40,7 @@ export function NavUser({
 		name: string;
 		email: string;
 		avatar?: string;
+		role: string;
 	};
 }) {
 	const { isMobile } = useSidebar();
@@ -111,6 +113,16 @@ export function NavUser({
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
+						{user.role === "admin" && (
+							<>
+								<DropdownMenuItem asChild>
+									<Link href="/admin/dashboard">
+										<BrickWallShieldIcon />
+										Admin
+									</Link>
+								</DropdownMenuItem>
+							</>
+						)}
 						<DropdownMenuItem onClick={() => signOut({ fetchOptions: { onSuccess: () => { window.location.href = "/" }}})}>
 							<LogOutIcon />
 							Logout

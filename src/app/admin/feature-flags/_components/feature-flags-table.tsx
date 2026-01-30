@@ -94,7 +94,7 @@ function FlagTableRow({ flag }: { flag: FlagRow }) {
 				{flag.userCount}
 			</TableCell>
 			<TableCell className="text-sm text-muted-foreground">
-				{new Date(flag.createdAt).toLocaleDateString()}
+				{new Date(flag.createdAt).toLocaleDateString("en-US")}
 			</TableCell>
 		</TableRow>
 	);

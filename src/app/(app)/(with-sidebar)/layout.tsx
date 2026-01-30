@@ -14,6 +14,7 @@ export default async function AppWithSidebarLayout({
 		name: session?.user?.name || "Name",
 		email: session?.user?.email || "email@example.com",
 		avatar: session?.user?.image || undefined,
+		role: session?.user?.role || "user",
 	};
 
 	return (

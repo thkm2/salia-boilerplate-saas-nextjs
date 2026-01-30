@@ -1,5 +1,5 @@
 
-[] - Feature flag crud
+[X] - Feature flag crud
 [] - Plans + crédits (conso et affichage)
 [] - Stripe
 [] - Magic link
@@ -8,7 +8,7 @@
 [] - *Tests
 [] - Telegram log
 [] - Posthog
-[] - Guide de démarrage
+[] - Guide de démarragef
 
 
 

@@ -26,7 +26,7 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
 				<InfoRow label="Email" value={user.email} />
 				<InfoRow label="Role" value={<Badge variant={user.role === "admin" ? "default" : user.role === "beta" ? "secondary" : "outline"}>{user.role}</Badge>} />
 				<InfoRow label="Plan" value={<Badge variant={user.plan === "pro" || user.plan === "admin" ? "default" : user.plan === "basic" ? "secondary" : "outline"}>{user.plan}</Badge>} />
-				<InfoRow label="Credits" value={user.credits.toLocaleString()} />
+				<InfoRow label="Credits" value={user.credits.toLocaleString("en-US")} />
 				<InfoRow
 					label="Feature Flags"
 					value={
@@ -47,7 +47,7 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
 					label="First Login"
 					value={
 						user.firstLoginAt
-							? new Date(user.firstLoginAt).toLocaleString()
+							? new Date(user.firstLoginAt).toLocaleString("en-US")
 							: "Never"
 					}
 				/>
@@ -55,7 +55,7 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
 					label="Last Login"
 					value={
 						user.lastLoginAt
-							? new Date(user.lastLoginAt).toLocaleString()
+							? new Date(user.lastLoginAt).toLocaleString("en-US")
 							: "Never"
 					}
 				/>

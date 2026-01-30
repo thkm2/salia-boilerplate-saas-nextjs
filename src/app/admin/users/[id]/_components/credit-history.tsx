@@ -87,7 +87,7 @@ export function CreditHistory({
 												.join(" ")}
 									</p>
 									<p className="text-xs text-muted-foreground">
-										{new Date(t.createdAt).toLocaleString()}
+										{new Date(t.createdAt).toLocaleString("en-US")}
 									</p>
 								</div>
 								<Badge

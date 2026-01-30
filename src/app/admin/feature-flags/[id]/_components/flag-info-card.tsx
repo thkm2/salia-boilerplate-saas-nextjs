@@ -67,11 +67,11 @@ export function FlagInfoCard({ flag }: FlagInfoCardProps) {
 				/>
 				<InfoRow
 					label="Created"
-					value={new Date(flag.createdAt).toLocaleString()}
+					value={new Date(flag.createdAt).toLocaleString("en-US")}
 				/>
 				<InfoRow
 					label="Updated"
-					value={new Date(flag.updatedAt).toLocaleString()}
+					value={new Date(flag.updatedAt).toLocaleString("en-US")}
 				/>
 			</CardContent>
 		</Card>

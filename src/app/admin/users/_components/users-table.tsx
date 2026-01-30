@@ -97,16 +97,16 @@ export function UsersTable({ users }: { users: UserRow[] }) {
 									<Badge variant={planBadgeVariant(u.plan)}>{u.plan}</Badge>
 								</TableCell>
 								<TableCell className="text-right font-medium pr-6">
-									{u.credits.toLocaleString()}
+									{u.credits.toLocaleString("en-US")}
 								</TableCell>
 								<TableCell className="text-sm text-muted-foreground">
 									{u.lastLoginAt
-										? new Date(u.lastLoginAt).toLocaleDateString()
+										? new Date(u.lastLoginAt).toLocaleDateString("en-US")
 										: "Never"}
 								</TableCell>
 								<TableCell className="text-sm text-muted-foreground">
 									{u.firstLoginAt
-										? new Date(u.firstLoginAt).toLocaleDateString()
+										? new Date(u.firstLoginAt).toLocaleDateString("en-US")
 										: "Never"}
 								</TableCell>
 							</TableRow>

@@ -98,12 +98,6 @@ export function NavUser({
 								{theme === "dark" ? <MoonIcon /> : <SunIcon />}
 								Thème
 							</DropdownMenuItem>
-							<DropdownMenuItem asChild>
-								<Link href="/settings">
-									<SettingsIcon />
-									Settings
-								</Link>
-							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem asChild>

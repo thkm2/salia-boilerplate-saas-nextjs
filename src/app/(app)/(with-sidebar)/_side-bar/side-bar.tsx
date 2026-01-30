@@ -21,6 +21,7 @@ type User = {
 	name: string;
 	email: string;
 	avatar?: string;
+	role: string;
 };
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
@@ -70,7 +71,7 @@ export function AppSidebar({ user, ...sidebarProps }: AppSidebarProps) {
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={data.navMain} />
-				<NavSecondary items={data.navSecondary} className="mt-auto" />
+				{/*<NavSecondary items={data.navSecondary} className="mt-auto" />*/}
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser user={user} />
