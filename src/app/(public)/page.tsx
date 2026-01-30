@@ -32,9 +32,11 @@ const LandingPage = () => {
 
 			<Testimonials {...landingContent.testimonials} />
 
-			<div id="faq" className="flex justify-center px-6 lg:px-12">
-				<FaqSectionWithCategories {...landingContent.faq} />
-			</div>
+			<section id="faq" className="py-24 lg:py-32 border-t">
+				<div className="mx-auto flex max-w-6xl justify-center px-6 lg:px-12">
+					<FaqSectionWithCategories {...landingContent.faq} />
+				</div>
+			</section>
 
 			<CtaSection {...landingContent.finalCta} variant="highlight" />
 

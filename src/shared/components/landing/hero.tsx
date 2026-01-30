@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 interface HeroProps {
 	badge: string;
@@ -23,26 +23,37 @@ export function Hero({
 	trustedByText,
 }: HeroProps) {
 	return (
-		<section className="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-28">
-			<div className="mx-auto max-w-6xl px-6 lg:px-12">
+		<section className="relative overflow-hidden pt-32 pb-24 lg:pt-44 lg:pb-32">
+			{/* Subtle radial glow behind hero */}
+			<div className="pointer-events-none absolute inset-0 overflow-hidden">
+				<div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 size-[800px] rounded-full bg-primary/[0.03] blur-3xl" />
+			</div>
+
+			<div className="relative mx-auto max-w-6xl px-6 lg:px-12">
 				<div className="mx-auto max-w-3xl text-center">
-					<Badge variant="outline" className="mb-6">
+					<Badge variant="outline" className="mb-8 gap-1.5 px-3 py-1 text-xs">
+						<Sparkles className="size-3" />
 						{badge}
 					</Badge>
 
-					<h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-						{headline}{" "}
-						<span className="bg-gradient-to-r from-primary via-primary/70 to-primary bg-clip-text text-transparent">
-							{headlineHighlight}
+					<h1 className="text-[2.5rem] font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+						{headline}
+						<br />
+						<span className="relative inline-block mt-1">
+							<span className="relative z-10">{headlineHighlight}</span>
+							<span
+								aria-hidden="true"
+								className="absolute -bottom-1 left-0 h-3 w-full bg-primary/10 -rotate-1 rounded-sm"
+							/>
 						</span>
 					</h1>
 
-					<p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+					<p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
 						{subheadline}
 					</p>
 
-					<div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-						<Button asChild size="lg" className="w-full sm:w-auto">
+					<div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+						<Button asChild size="lg" className="w-full sm:w-auto px-8">
 							<Link href={primaryCta.href}>
 								{primaryCta.label}
 								<ArrowRight className="ml-2 size-4" />
@@ -51,16 +62,20 @@ export function Hero({
 						<Button
 							asChild
 							size="lg"
-							variant="outline"
-							className="w-full sm:w-auto"
+							variant="ghost"
+							className="w-full sm:w-auto text-muted-foreground"
 						>
 							<Link href={secondaryCta.href}>{secondaryCta.label}</Link>
 						</Button>
 					</div>
 
-					<p className="mt-12 text-sm text-muted-foreground">
-						{trustedByText}
-					</p>
+					{/* Trusted by — with a subtle divider */}
+					<div className="mt-16 flex flex-col items-center gap-3">
+						<div className="h-px w-12 bg-border" />
+						<p className="text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
+							{trustedByText}
+						</p>
+					</div>
 				</div>
 			</div>
 		</section>

@@ -2,16 +2,9 @@ import Link from "next/link";
 import { PLANS, type PlanId } from "@/lib/plans";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
-} from "@/shared/components/ui/card";
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/shared/components/ui/separator";
 
 interface PricingFeature {
 	text: string;
@@ -38,88 +31,95 @@ export function Pricing({
 	plans,
 }: PricingProps) {
 	return (
-		<section id="pricing" className="py-20 lg:py-28">
+		<section id="pricing" className="py-24 lg:py-32">
 			<div className="mx-auto max-w-6xl px-6 lg:px-12">
 				{/* Section header */}
-				<div className="mx-auto max-w-2xl text-center mb-16">
+				<div className="mx-auto max-w-2xl text-center mb-20">
 					<Badge variant="outline" className="mb-4">
 						{badge}
 					</Badge>
-					<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+					<h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
 						{title}
 					</h2>
-					<p className="mt-4 text-lg text-muted-foreground">{description}</p>
+					<p className="mt-4 text-muted-foreground sm:text-lg">{description}</p>
 				</div>
 
 				{/* Pricing cards */}
-				<div className="grid gap-8 lg:grid-cols-3 items-start">
+				<div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3 lg:gap-0">
 					{planOrder.map((planId) => {
 						const plan = PLANS[planId];
 						const config = plans[planId];
 						const isPopular = planId === popularPlan;
 
 						return (
-							<Card
+							<div
 								key={planId}
 								className={cn(
-									"relative",
-									isPopular &&
-										"border-primary shadow-lg lg:scale-105",
+									"relative flex flex-col rounded-2xl border bg-card p-8 lg:p-10",
+									isPopular
+										? "z-10 border-foreground shadow-xl lg:-my-4"
+										: "lg:first:rounded-r-none lg:last:rounded-l-none",
 								)}
 							>
 								{isPopular && (
-									<div className="absolute -top-3 left-1/2 -translate-x-1/2">
-										<Badge>Most popular</Badge>
-									</div>
+									<Badge className="absolute -top-3 left-1/2 -translate-x-1/2">
+										Most popular
+									</Badge>
 								)}
 
-								<CardHeader className="text-center">
-									<CardTitle className="text-xl">{plan.label}</CardTitle>
-									<CardDescription>
-										{plan.credits} credits / month
-									</CardDescription>
-									<div className="mt-4">
-										<span className="text-4xl font-bold">
-											{plan.price === 0 ? "Free" : `$${plan.price}`}
+								{/* Plan header */}
+								<div>
+									<p className="text-sm font-medium text-muted-foreground">
+										{plan.label}
+									</p>
+									<div className="mt-4 flex items-baseline gap-1">
+										<span className="text-5xl font-bold tracking-tight">
+											{plan.price === 0 ? "$0" : `$${plan.price}`}
 										</span>
-										{plan.price > 0 && (
-											<span className="text-muted-foreground ml-1">/mo</span>
-										)}
+										<span className="text-sm text-muted-foreground">/mo</span>
 									</div>
-								</CardHeader>
+									<p className="mt-2 text-sm text-muted-foreground">
+										{plan.credits} credits included
+									</p>
+								</div>
 
-								<CardContent>
-									<ul className="space-y-3">
-										{config.features.map((feature) => (
-											<li key={feature.text} className="flex items-center gap-3">
-												{feature.included ? (
-													<Check className="size-4 text-primary shrink-0" />
-												) : (
-													<X className="size-4 text-muted-foreground/40 shrink-0" />
-												)}
-												<span
-													className={cn(
-														"text-sm",
-														!feature.included && "text-muted-foreground/60",
-													)}
-												>
-													{feature.text}
+								<Separator className="my-8" />
+
+								{/* Feature list */}
+								<ul className="flex-1 space-y-4">
+									{config.features.map((feature) => (
+										<li
+											key={feature.text}
+											className="flex items-start gap-3"
+										>
+											{feature.included ? (
+												<span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-foreground">
+													<Check className="size-2.5 text-background" />
 												</span>
-											</li>
-										))}
-									</ul>
-								</CardContent>
+											) : (
+												<X className="mt-0.5 size-4 shrink-0 text-muted-foreground/30" />
+											)}
+											<span
+												className={cn(
+													"text-sm leading-snug",
+													!feature.included && "text-muted-foreground/50",
+												)}
+											>
+												{feature.text}
+											</span>
+										</li>
+									))}
+								</ul>
 
-								<CardFooter>
-									<Button
-										asChild
-										variant={isPopular ? "default" : "outline"}
-										className="w-full"
-									>
-										<Link href="/auth">{ctaText}</Link>
-									</Button>
-								</CardFooter>
-							</Card>
+								{/* CTA */}
+								<Button
+									asChild
+									variant={isPopular ? "default" : "outline"}
+									className="mt-10 w-full"
+								>
+									<Link href="/auth">{ctaText}</Link>
+								</Button>
+							</div>
 						);
 					})}
 				</div>
