@@ -1,12 +1,11 @@
 
 [X] - Feature flag crud
 [X] - Plans + crédits (conso et affichage)
+[X] - Settings/profile
 [] - Stripe
 [] - Magic link
-[] - Settings/profile
 [] - Landing page
 [] - *Tests
-[] - Telegram log
 [] - Posthog
 [] - Guide de démarrage
 
