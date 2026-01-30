@@ -107,7 +107,7 @@ export async function hasEnoughCredits(amount: number): Promise<boolean> {
 /**
  * Get current user's plan
  */
-export async function getUserPlan(): Promise<"free" | "basic" | "pro" | "admin" | null> {
+export async function getUserPlan(): Promise<"free" | "basic" | "pro" | null> {
   const session = await getSession();
 
   if (!session) {

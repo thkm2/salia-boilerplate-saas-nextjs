@@ -11,7 +11,7 @@ export const user = pgTable("user", {
 
   // Custom fields
   role: text("role").notNull().default("user"), // admin, user, beta
-  plan: text("plan").notNull().default("free"), // free, basic, pro, admin
+  plan: text("plan").notNull().default("free"), // free, basic, pro
   credits: integer("credits").notNull().default(0),
   firstLoginAt: timestamp("firstLoginAt"),
   lastLoginAt: timestamp("lastLoginAt"),

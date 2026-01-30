@@ -25,7 +25,7 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
 				<InfoRow label="ID" value={user.id} />
 				<InfoRow label="Email" value={user.email} />
 				<InfoRow label="Role" value={<Badge variant={user.role === "admin" ? "default" : user.role === "beta" ? "secondary" : "outline"}>{user.role}</Badge>} />
-				<InfoRow label="Plan" value={<Badge variant={user.plan === "pro" || user.plan === "admin" ? "default" : user.plan === "basic" ? "secondary" : "outline"}>{user.plan}</Badge>} />
+				<InfoRow label="Plan" value={<Badge variant={user.plan === "pro" ? "default" : user.plan === "basic" ? "secondary" : "outline"}>{user.plan}</Badge>} />
 				<InfoRow label="Credits" value={user.credits.toLocaleString("en-US")} />
 				<InfoRow
 					label="Feature Flags"

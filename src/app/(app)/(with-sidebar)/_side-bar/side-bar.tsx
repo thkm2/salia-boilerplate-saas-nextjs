@@ -4,6 +4,7 @@ import { List, LayoutDashboard, CircleDashed, BadgeQuestionMark } from "lucide-r
 import { NavMain } from "@/shared/components/sidebar/nav-main";
 import { NavSecondary } from "@/shared/components/sidebar/nav-secondary";
 import { NavUser } from "./nav-user";
+import { NavCredits } from "./nav-credits";
 import {
 	Sidebar,
 	SidebarContent,
@@ -22,6 +23,8 @@ type User = {
 	email: string;
 	avatar?: string;
 	role: string;
+	plan: string;
+	credits: number;
 };
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
@@ -74,6 +77,7 @@ export function AppSidebar({ user, ...sidebarProps }: AppSidebarProps) {
 				{/*<NavSecondary items={data.navSecondary} className="mt-auto" />*/}
 			</SidebarContent>
 			<SidebarFooter>
+				<NavCredits plan={user.plan} credits={user.credits} />
 				<NavUser user={user} />
 			</SidebarFooter>
 		</Sidebar>

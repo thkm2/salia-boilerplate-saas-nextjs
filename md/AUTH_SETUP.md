@@ -22,7 +22,7 @@ L'authentification a été configurée avec succès en utilisant Better Auth, Dr
 
 - **Champs utilisateur personnalisés**:
   - `role`: "admin" | "user" | "beta"
-  - `plan`: "free" | "basic" | "pro" | "admin"
+  - `plan`: "free" | "basic" | "pro"
   - `credits`: Nombre de crédits
   - `featureFlags`: Flags de fonctionnalités (JSON)
   - `firstLoginAt`: Date de première connexion

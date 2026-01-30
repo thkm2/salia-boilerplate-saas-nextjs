@@ -8,8 +8,14 @@
 [] - *Tests
 [] - Telegram log
 [] - Posthog
-[] - Guide de démarragef
+[] - Guide de démarrage
 
+Workflow :
+1. Idée (questions, etc)
+2. Plan
+3. Dev
+4. Test rapide
+5. Review
 
 
 # TODO - SaaS Boilerplate Implementation
@@ -77,7 +83,7 @@ Roadmap détaillée pour implémenter le boilerplate SaaS complet.
 
 - [ ] **Ajouter les champs custom**
   - [ ] Ajouter `role` enum dans users (admin, user, beta)
-  - [ ] Ajouter `plan` enum dans users (free, basic, pro, admin)
+  - [ ] Ajouter `plan` enum dans users (free, basic, pro)
   - [ ] Ajouter `credits` integer dans users (balance actuel)
   - [ ] Ajouter `featureFlags` jsonb dans users (array de strings)
 
@@ -167,7 +173,6 @@ Roadmap détaillée pour implémenter le boilerplate SaaS complet.
   // FREE: { credits: 10, features: [...] }
   // BASIC: { credits: 100, features: [...] }
   // PRO: { credits: 1000, features: [...] }
-  // ADMIN: { credits: -1 (unlimited), features: [...] }
   ```
 
 - [ ] **Helper functions**

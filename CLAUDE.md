@@ -88,7 +88,7 @@ src/
 
 ### Roles & Plans
 - **Roles**: `admin`, `user`, `beta` (stored in session)
-- **Plans**: `free`, `basic`, `pro`, `admin` - Each with credit allocations
+- **Plans**: `free`, `basic`, `pro` - Each with credit allocations
 
 ### Credits System
 Credits are transactional with full audit trail:

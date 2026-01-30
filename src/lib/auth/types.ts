@@ -14,7 +14,7 @@ export interface ExtendedUser {
   updatedAt: Date;
   // Custom fields
   role: "admin" | "user" | "beta";
-  plan: "free" | "basic" | "pro" | "admin";
+  plan: "free" | "basic" | "pro";
   credits: number;
   firstLoginAt?: Date | null;
   lastLoginAt?: Date | null;
