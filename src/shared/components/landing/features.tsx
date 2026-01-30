@@ -1,29 +1,4 @@
-import {
-	Zap,
-	BarChart3,
-	Shield,
-	Layers,
-	Globe,
-	Lock,
-	Check,
-	type LucideIcon,
-} from "lucide-react";
-import { Badge } from "@/shared/components/ui/badge";
-
-const iconMap: Record<string, LucideIcon> = {
-	Zap,
-	BarChart3,
-	Shield,
-	Layers,
-	Globe,
-	Lock,
-};
-
-interface Feature {
-	icon: string;
-	title: string;
-	description: string;
-}
+import { Check } from "lucide-react";
 
 interface Benefit {
 	title: string;
@@ -33,55 +8,27 @@ interface Benefit {
 }
 
 interface FeaturesProps {
-	badge: string;
 	title: string;
 	description: string;
-	features: Feature[];
 	benefits: Benefit[];
 }
 
-export function Features({
-	badge,
-	title,
-	description,
-	features,
-	benefits,
-}: FeaturesProps) {
+export function Features({ title, description, benefits }: FeaturesProps) {
 	return (
 		<section id="features" className="py-24 lg:py-32 border-t bg-muted/30">
 			<div className="mx-auto max-w-6xl px-6 lg:px-12">
 				{/* Section header */}
 				<div className="mx-auto max-w-2xl text-center mb-20">
-					<Badge variant="outline" className="mb-4">
-						{badge}
-					</Badge>
 					<h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
 						{title}
 					</h2>
-					<p className="mt-4 text-muted-foreground sm:text-lg">{description}</p>
-				</div>
-
-				{/* Feature cards — clean bordered grid */}
-				<div className="grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-					{features.map((feature) => {
-						const Icon = iconMap[feature.icon] ?? Zap;
-						return (
-							<div
-								key={feature.title}
-								className="flex flex-col gap-3 bg-background p-8 sm:p-10"
-							>
-								<Icon className="size-5 text-foreground" strokeWidth={1.5} />
-								<h3 className="text-base font-semibold">{feature.title}</h3>
-								<p className="text-sm leading-relaxed text-muted-foreground">
-									{feature.description}
-								</p>
-							</div>
-						);
-					})}
+					<p className="mt-4 text-muted-foreground sm:text-lg">
+						{description}
+					</p>
 				</div>
 
 				{/* Alternating benefit blocks */}
-				<div className="mt-28 space-y-28">
+				<div className="space-y-28">
 					{benefits.map((benefit, index) => {
 						const isImageLeft = benefit.imagePosition === "left";
 						return (

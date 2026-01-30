@@ -33,7 +33,7 @@ const FaqSectionWithCategories = React.forwardRef<HTMLElement, FaqSectionWithCat
     return (
       <section
         ref={ref}
-        className={cn("py-10 lg:py-14 max-w-4xl", className)}
+        className={cn("py-10 lg:py-14 max-w-4xl w-full", className)}
         {...props}
       >
             {/* Header */}

@@ -31,12 +31,14 @@ export function Hero({
 
 			<div className="relative mx-auto max-w-6xl px-6 lg:px-12">
 				<div className="mx-auto max-w-3xl text-center">
-					<Badge variant="outline" className="mb-8 gap-1.5 px-3 py-1 text-xs">
-						<Sparkles className="size-3" />
-						{badge}
-					</Badge>
+					<div className="animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-both">
+						<Badge variant="outline" className="mb-8 gap-1.5 px-3 py-1 text-xs">
+							<Sparkles className="size-3" />
+							{badge}
+						</Badge>
+					</div>
 
-					<h1 className="text-[2.5rem] font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+					<h1 className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150 fill-mode-both text-[2.5rem] font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
 						{headline}
 						<br />
 						<span className="relative inline-block mt-1">
@@ -48,11 +50,11 @@ export function Hero({
 						</span>
 					</h1>
 
-					<p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+					<p className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300 fill-mode-both mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
 						{subheadline}
 					</p>
 
-					<div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+					<div className="animate-in fade-in slide-in-from-bottom-3 duration-500 delay-[450ms] fill-mode-both mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
 						<Button asChild size="lg" className="w-full sm:w-auto px-8">
 							<Link href={primaryCta.href}>
 								{primaryCta.label}
@@ -70,7 +72,7 @@ export function Hero({
 					</div>
 
 					{/* Trusted by — with a subtle divider */}
-					<div className="mt-16 flex flex-col items-center gap-3">
+					<div className="animate-in fade-in duration-700 delay-700 fill-mode-both mt-16 flex flex-col items-center gap-3">
 						<div className="h-px w-12 bg-border" />
 						<p className="text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
 							{trustedByText}

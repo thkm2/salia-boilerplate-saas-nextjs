@@ -17,17 +17,6 @@ interface HeroContent {
 	trustedByText: string;
 }
 
-interface LogoCloudContent {
-	title: string;
-	logos: { name: string }[];
-}
-
-interface Feature {
-	icon: string;
-	title: string;
-	description: string;
-}
-
 interface Benefit {
 	title: string;
 	description: string;
@@ -36,10 +25,8 @@ interface Benefit {
 }
 
 interface FeaturesContent {
-	badge: string;
 	title: string;
 	description: string;
-	features: Feature[];
 	benefits: Benefit[];
 }
 
@@ -98,9 +85,7 @@ interface FaqContent {
 
 export interface LandingContent {
 	hero: HeroContent;
-	logoCloud: LogoCloudContent;
 	features: FeaturesContent;
-	midCta: CtaSectionContent;
 	pricing: PricingContent;
 	testimonials: TestimonialsContent;
 	faq: FaqContent;
@@ -122,42 +107,10 @@ export const landingContent: LandingContent = {
 		trustedByText: "Trusted by 500+ developers worldwide",
 	},
 
-	logoCloud: {
-		title: "Backed by teams who ship",
-		logos: [
-			{ name: "Vercel" },
-			{ name: "Stripe" },
-			{ name: "Linear" },
-			{ name: "Notion" },
-			{ name: "Figma" },
-		],
-	},
-
 	features: {
-		badge: "Features",
 		title: "Everything you need to launch",
 		description:
 			"Built on modern foundations so you never have to worry about infrastructure again.",
-		features: [
-			{
-				icon: "Zap",
-				title: "Lightning Fast",
-				description:
-					"Server components and edge-ready by default. Your users feel the difference.",
-			},
-			{
-				icon: "BarChart3",
-				title: "Built-in Analytics",
-				description:
-					"Track usage, credits, and growth with a dashboard that just works.",
-			},
-			{
-				icon: "Shield",
-				title: "Secure by Default",
-				description:
-					"Auth, roles, and feature flags out of the box. SOC-2 patterns included.",
-			},
-		],
 		benefits: [
 			{
 				title: "Authentication that just works",
@@ -182,14 +135,6 @@ export const landingContent: LandingContent = {
 				imagePosition: "left",
 			},
 		],
-	},
-
-	midCta: {
-		title: "Ready to stop reinventing the wheel?",
-		description:
-			"Join hundreds of developers shipping faster with Salia. Free tier available — no credit card required.",
-		primaryCta: { label: "Start building now", href: "/auth" },
-		secondaryCta: { label: "View documentation", href: "#features" },
 	},
 
 	pricing: {
