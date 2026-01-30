@@ -1,3 +1,17 @@
+
+[] - Feature flag crud
+[] - Plans + crédits (conso et affichage)
+[] - Stripe
+[] - Magic link
+[] - Settings/profile
+[] - Landing page
+[] - *Tests
+[] - Telegram log
+[] - Posthog
+[] - Guide de démarrage
+
+
+
 # TODO - SaaS Boilerplate Implementation
 
 Roadmap détaillée pour implémenter le boilerplate SaaS complet.

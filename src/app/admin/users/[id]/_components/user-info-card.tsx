@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { parseFeatureFlags } from "@/lib/auth/types";
 
 interface UserInfoCardProps {
 	user: {
@@ -9,15 +8,13 @@ interface UserInfoCardProps {
 		role: string;
 		plan: string;
 		credits: number;
-		featureFlags: string;
+		flagNames: string[];
 		firstLoginAt: Date | null;
 		lastLoginAt: Date | null;
 	};
 }
 
 export function UserInfoCard({ user }: UserInfoCardProps) {
-	const flags = parseFeatureFlags(user.featureFlags);
-	const flagKeys = Object.keys(flags).filter((k) => flags[k]);
 
 	return (
 		<Card className="min-w-0">
@@ -33,9 +30,9 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
 				<InfoRow
 					label="Feature Flags"
 					value={
-						flagKeys.length > 0 ? (
+						user.flagNames.length > 0 ? (
 							<div className="flex flex-wrap gap-1">
-								{flagKeys.map((flag) => (
+								{user.flagNames.map((flag) => (
 									<Badge key={flag} variant="secondary">
 										{flag}
 									</Badge>

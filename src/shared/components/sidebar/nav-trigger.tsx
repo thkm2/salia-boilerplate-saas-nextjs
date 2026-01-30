@@ -15,6 +15,7 @@ import {
 	Settings,
 	CreditCard,
 	Binary,
+	Flag,
 	type LucideIcon,
 } from "lucide-react"
 
@@ -32,6 +33,7 @@ const iconRegistry: Record<string, LucideIcon> = {
 const segmentIcons: Record<string, LucideIcon> = {
 	dashboard: LayoutDashboard,
 	users: Users,
+	"feature-flags": Flag,
 	page: List,
 	help: CircleHelp,
 	settings: Settings,

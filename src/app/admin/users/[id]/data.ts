@@ -20,7 +20,6 @@ export const getUserById = cache(async (id: string) => {
 			role: user.role,
 			plan: user.plan,
 			credits: user.credits,
-			featureFlags: user.featureFlags,
 			firstLoginAt: user.firstLoginAt,
 			lastLoginAt: user.lastLoginAt,
 			createdAt: user.createdAt,

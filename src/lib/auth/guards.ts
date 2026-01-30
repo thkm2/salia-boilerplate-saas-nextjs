@@ -2,7 +2,9 @@ import { auth } from "./auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ExtendedSession } from "./types";
-import { parseFeatureFlags } from "./types";
+import { db } from "@/lib/db";
+import { featureFlag, userFeatureFlag } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
 
 /**
  * Get the current session from Better Auth
@@ -61,9 +63,18 @@ export async function canAccessFeature(featureName: string): Promise<boolean> {
     return true;
   }
 
-  // Check feature flags (stored as JSON string)
-  const featureFlags = parseFeatureFlags(session.user.featureFlags);
-  return featureFlags[featureName] === true;
+  const result = await db
+    .select({ flagId: userFeatureFlag.flagId })
+    .from(userFeatureFlag)
+    .innerJoin(featureFlag, eq(userFeatureFlag.flagId, featureFlag.id))
+    .where(and(
+      eq(userFeatureFlag.userId, session.user.id),
+      eq(featureFlag.name, featureName),
+      eq(featureFlag.enabled, true),
+    ))
+    .limit(1);
+
+  return result.length > 0;
 }
 
 /**

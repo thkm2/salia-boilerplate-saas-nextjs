@@ -13,7 +13,6 @@ export const user = pgTable("user", {
   role: text("role").notNull().default("user"), // admin, user, beta
   plan: text("plan").notNull().default("free"), // free, basic, pro, admin
   credits: integer("credits").notNull().default(0),
-  featureFlags: text("featureFlags").notNull().default("{}"), // Stored as JSON string for Better Auth compatibility
   firstLoginAt: timestamp("firstLoginAt"),
   lastLoginAt: timestamp("lastLoginAt"),
 });

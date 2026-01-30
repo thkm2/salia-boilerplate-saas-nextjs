@@ -1,5 +1,3 @@
-"use server";
-
 import { cache } from "react";
 import { db } from "@/lib/db";
 import { user, session, creditTransaction } from "@/lib/db/schema";

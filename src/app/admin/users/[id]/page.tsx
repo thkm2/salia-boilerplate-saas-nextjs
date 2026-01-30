@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getUserById, getUserCreditTransactions } from "./data";
+import { getAllFlagsForUser } from "../../feature-flags/data";
 import { UserDetailHeader } from "./_components/user-detail-header";
 import { UserInfoCard } from "./_components/user-info-card";
 import { UserActionsCard } from "./_components/user-actions-card";
@@ -12,9 +13,10 @@ const AdminUserDetailPage = async ({
 }) => {
 	const { id } = await params;
 
-	const [userData, creditData] = await Promise.all([
+	const [userData, creditData, flags] = await Promise.all([
 		getUserById(id),
 		getUserCreditTransactions(id),
+		getAllFlagsForUser(id),
 	]);
 
 	if (!userData) {
@@ -30,11 +32,14 @@ const AdminUserDetailPage = async ({
 			/>
 
 			<div className="grid gap-6 md:grid-cols-2">
-				<UserInfoCard user={userData} />
+				<UserInfoCard user={{
+					...userData,
+					flagNames: flags.filter((f) => f.assigned && f.enabled).map((f) => f.name),
+				}} />
 				<UserActionsCard
 					userId={userData.id}
 					role={userData.role}
-					featureFlags={userData.featureFlags}
+					flags={flags}
 				/>
 			</div>
 

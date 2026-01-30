@@ -55,11 +55,6 @@ export const auth = betterAuth({
         required: true,
         defaultValue: 0,
       },
-      featureFlags: {
-        type: "string", // Stored as JSON string
-        required: false,
-        defaultValue: "{}",
-      },
       firstLoginAt: {
         type: "date",
         required: false,
