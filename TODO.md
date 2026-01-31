@@ -2,10 +2,9 @@
 [X] - Feature flag crud
 [X] - Plans + crédits (conso et affichage)
 [X] - Settings/profile
+[X] - Landing page
 [] - Stripe
 [] - Magic link
-[] - Landing page
-[] - *Tests
 [] - Posthog
 [] - Guide de démarrage
 

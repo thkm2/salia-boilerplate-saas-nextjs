@@ -43,10 +43,50 @@ export function Hero({
 						<br />
 						<span className="relative inline-block mt-1">
 							<span className="relative z-10">{headlineHighlight}</span>
-							<span
+							<svg
 								aria-hidden="true"
-								className="absolute -bottom-1 left-0 h-3 w-full bg-primary/10 -rotate-1 rounded-sm"
-							/>
+								viewBox="0 0 200 10"
+								preserveAspectRatio="none"
+								className="absolute -bottom-1.5 left-0 h-3.5 w-full"
+							>
+								<defs>
+									<filter
+										id="marker-rough"
+										x="-2%"
+										y="-15%"
+										width="104%"
+										height="130%"
+									>
+										<feTurbulence
+											type="fractalNoise"
+											baseFrequency="0.035 0.07"
+											numOctaves="3"
+											seed="4"
+											result="noise"
+										/>
+										<feDisplacementMap
+											in="SourceGraphic"
+											in2="noise"
+											scale="1.8"
+											xChannelSelector="R"
+											yChannelSelector="G"
+										/>
+									</filter>
+								</defs>
+								{/* Main marker body — tapered ends, pressure variation */}
+								<path
+									d="M 5 5 C 12 2.5, 35 4.5, 65 3 S 120 2, 160 3.5 C 180 4, 195 3, 197 5 C 198 6, 190 7, 170 6.5 S 120 8, 80 7 S 30 8, 10 6.5 C 4 6, 3 5.5, 5 5 Z"
+									fill="var(--primary)"
+									fillOpacity="0.18"
+									filter="url(#marker-rough)"
+								/>
+								{/* Denser ink core where pressure is highest */}
+								<path
+									d="M 25 4.2 C 50 3.2, 85 5, 115 3.8 S 165 3.5, 180 4.5 L 178 6 C 155 6.8, 120 5.2, 90 6.2 S 45 6.8, 27 5.5 Z"
+									fill="var(--primary)"
+									fillOpacity="0.08"
+								/>
+							</svg>
 						</span>
 					</h1>
 
