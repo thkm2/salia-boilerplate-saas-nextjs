@@ -1,14 +1,20 @@
+import { Suspense } from "react";
 import { requireAuth } from "@/lib/auth/guards";
 import { PLANS, type PlanId } from "@/lib/plans";
 import { CurrentPlanCard } from "./_components/current-plan-card";
 import { PlanCard } from "./_components/plan-card";
+import { CheckoutResult } from "./_components/checkout-result";
 
 export default async function PlansPage() {
   const session = await requireAuth();
-  const { plan, credits } = session.user;
+  const { plan, credits, stripeSubscriptionId } = session.user;
 
   return (
     <div className="space-y-8">
+      <Suspense>
+        <CheckoutResult />
+      </Suspense>
+
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Plans</h1>
         <p className="text-muted-foreground">
@@ -16,7 +22,7 @@ export default async function PlansPage() {
         </p>
       </div>
 
-      <CurrentPlanCard plan={plan} credits={credits} />
+      <CurrentPlanCard plan={plan} credits={credits} hasSubscription={!!stripeSubscriptionId} />
 
       <div>
         <h2 className="text-lg font-semibold mb-4">Available plans</h2>
@@ -31,6 +37,7 @@ export default async function PlansPage() {
                 credits={config.credits}
                 isCurrent={plan === id}
                 isPopular={id === "basic"}
+                currentPlan={plan}
               />
             )
           )}

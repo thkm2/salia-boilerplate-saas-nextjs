@@ -12,9 +12,14 @@ export const user = pgTable("user", {
   // Custom fields
   role: text("role").notNull().default("user"), // admin, user, beta
   plan: text("plan").notNull().default("free"), // free, basic, pro
-  credits: integer("credits").notNull().default(0),
+  credits: integer("credits").notNull().default(10),
   firstLoginAt: timestamp("firstLoginAt"),
   lastLoginAt: timestamp("lastLoginAt"),
+
+  // Stripe
+  stripeCustomerId: text("stripeCustomerId").unique(),
+  stripeSubscriptionId: text("stripeSubscriptionId").unique(),
+  creditsResetAt: timestamp("creditsResetAt"),
 });
 
 export const session = pgTable("session", {

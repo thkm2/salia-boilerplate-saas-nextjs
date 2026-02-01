@@ -1,7 +1,12 @@
+"use client";
+
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Check } from "lucide-react";
 import type { PlanId } from "@/lib/plans";
+import { createCheckoutSession, createBillingPortalSession } from "@/shared/actions/stripe";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 const PLAN_FEATURES: Record<PlanId, string[]> = {
   free: [
@@ -32,6 +37,7 @@ export function PlanCard({
   credits,
   isCurrent,
   isPopular,
+  currentPlan,
 }: {
   planId: PlanId;
   label: string;
@@ -39,8 +45,54 @@ export function PlanCard({
   credits: number;
   isCurrent: boolean;
   isPopular?: boolean;
+  currentPlan: PlanId;
 }) {
+  const [isPending, startTransition] = useTransition();
   const features = PLAN_FEATURES[planId];
+
+  const isPaidPlan = planId !== "free";
+  const isOnPaidPlan = currentPlan !== "free";
+
+  async function handleAction(action: () => Promise<void>) {
+    try {
+      await action();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    }
+  }
+
+  function getButtonConfig(): { label: string; action: () => void; disabled: boolean; variant: "default" | "outline" } {
+    if (isCurrent) {
+      return { label: "Current plan", action: () => {}, disabled: true, variant: "outline" };
+    }
+    if (isPaidPlan && !isOnPaidPlan) {
+      // Free user upgrading to paid
+      return {
+        label: "Upgrade",
+        action: () => startTransition(() => handleAction(() => createCheckoutSession(planId))),
+        disabled: isPending,
+        variant: isPopular ? "default" : "outline",
+      };
+    }
+    if (!isPaidPlan && isOnPaidPlan) {
+      // Paid user downgrading to free (via billing portal)
+      return {
+        label: "Downgrade",
+        action: () => startTransition(() => handleAction(() => createBillingPortalSession())),
+        disabled: isPending,
+        variant: "outline",
+      };
+    }
+    // Paid user switching to different paid plan (via billing portal)
+    return {
+      label: "Change plan",
+      action: () => startTransition(() => handleAction(() => createBillingPortalSession())),
+      disabled: isPending,
+      variant: isPopular ? "default" : "outline",
+    };
+  }
+
+  const btn = getButtonConfig();
 
   return (
     <div
@@ -72,15 +124,14 @@ export function PlanCard({
           </li>
         ))}
       </ul>
-      {isCurrent ? (
-        <Button disabled variant="outline" className="w-full">
-          Current plan
-        </Button>
-      ) : (
-        <Button disabled={!isPopular} variant={isPopular ? "default" : "outline"} className="w-full">
-          Choose this plan
-        </Button>
-      )}
+      <Button
+        disabled={btn.disabled}
+        variant={btn.variant}
+        className="w-full"
+        onClick={btn.action}
+      >
+        {isPending ? "Redirecting..." : btn.label}
+      </Button>
     </div>
   );
 }

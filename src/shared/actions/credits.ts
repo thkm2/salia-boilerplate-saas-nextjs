@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { creditTransaction, user } from "@/lib/db/schema";
 import { requireAuth } from "@/lib/auth/guards";
 import { eq, sql } from "drizzle-orm";
+import { maybeRenewFreeCredits } from "@/lib/credits";
 
 export async function useCredits(
   amount: number,
@@ -13,41 +14,40 @@ export async function useCredits(
   const session = await requireAuth();
   const userId = session.user.id;
 
-  if (session.user.credits < amount) {
-    return { error: "insufficient_credits" };
-  }
+  // Lazy renewal for free plan before checking balance
+  await maybeRenewFreeCredits(
+    userId,
+    session.user.plan,
+    session.user.creditsResetAt ?? null,
+  );
 
-  // Atomically decrement credits and create transaction
-  const [updated] = await db
-    .update(user)
-    .set({
-      credits: sql`${user.credits} - ${amount}`,
-      updatedAt: new Date(),
-    })
-    .where(eq(user.id, userId))
-    .returning({ credits: user.credits });
-
-  if (!updated || updated.credits < 0) {
-    // Race condition: credits went negative, rollback by adding back
-    await db
+  // Atomic decrement: only succeeds if credits >= amount
+  const result = await db.transaction(async (tx) => {
+    const [updated] = await tx
       .update(user)
       .set({
-        credits: sql`${user.credits} + ${amount}`,
+        credits: sql`${user.credits} - ${amount}`,
         updatedAt: new Date(),
       })
-      .where(eq(user.id, userId));
-    return { error: "insufficient_credits" };
-  }
+      .where(
+        sql`${user.id} = ${userId} AND ${user.credits} >= ${amount}`,
+      )
+      .returning({ credits: user.credits });
 
-  await db.insert(creditTransaction).values({
-    id: crypto.randomUUID(),
-    userId,
-    amount: -amount,
-    type,
-    description: description ?? null,
+    if (!updated) return { error: "insufficient_credits" as const };
+
+    await tx.insert(creditTransaction).values({
+      id: crypto.randomUUID(),
+      userId,
+      amount: -amount,
+      type,
+      description: description ?? null,
+    });
+
+    return { success: true as const };
   });
 
-  return { success: true };
+  return result;
 }
 
 export async function grantCredits(
@@ -56,19 +56,21 @@ export async function grantCredits(
   type: string,
   description?: string
 ) {
-  await db
-    .update(user)
-    .set({
-      credits: sql`${user.credits} + ${amount}`,
-      updatedAt: new Date(),
-    })
-    .where(eq(user.id, userId));
+  await db.transaction(async (tx) => {
+    await tx
+      .update(user)
+      .set({
+        credits: sql`${user.credits} + ${amount}`,
+        updatedAt: new Date(),
+      })
+      .where(eq(user.id, userId));
 
-  await db.insert(creditTransaction).values({
-    id: crypto.randomUUID(),
-    userId,
-    amount,
-    type,
-    description: description ?? null,
+    await tx.insert(creditTransaction).values({
+      id: crypto.randomUUID(),
+      userId,
+      amount,
+      type,
+      description: description ?? null,
+    });
   });
 }

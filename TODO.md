@@ -5,7 +5,10 @@
 [X] - Landing page
 [X] - Magic link
 [x] - Posthog
-[] - Stripe 
+[X] - Stripe 
+[] - Stripe invoice.payment_failed
+[] - Cron pour plan free ? ou affichage seul jsp
+[] - Meilleur mail pour tout
 [] - Posthog events + stripe
 [] - Guide de démarrage
 

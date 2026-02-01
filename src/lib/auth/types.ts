@@ -18,6 +18,10 @@ export interface ExtendedUser {
   credits: number;
   firstLoginAt?: Date | null;
   lastLoginAt?: Date | null;
+  // Stripe
+  stripeCustomerId?: string | null;
+  stripeSubscriptionId?: string | null;
+  creditsResetAt?: Date | null;
 }
 
 // Extended session type

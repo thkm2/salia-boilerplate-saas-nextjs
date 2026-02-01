@@ -5,6 +5,7 @@ import { Resend } from "resend";
 import { db } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { maybeRenewFreeCredits } from "@/lib/credits";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -89,6 +90,18 @@ export const auth = betterAuth({
         type: "date",
         required: false,
       },
+      stripeCustomerId: {
+        type: "string",
+        required: false,
+      },
+      stripeSubscriptionId: {
+        type: "string",
+        required: false,
+      },
+      creditsResetAt: {
+        type: "date",
+        required: false,
+      },
     },
   },
 
@@ -96,10 +109,14 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async (user) => {
-          if (!user.name) {
-            return { data: { ...user, name: user.email.split("@")[0] } };
+          const data = { ...user };
+          if (!data.name) {
+            data.name = data.email.split("@")[0];
           }
-          return { data: user };
+          // Initialize free plan credits and reset timestamp
+          data.credits = 10;
+          data.creditsResetAt = new Date();
+          return { data };
         },
       },
     },
@@ -107,7 +124,6 @@ export const auth = betterAuth({
       create: {
         after: async (session) => {
           try {
-            // Update lastLoginAt on every new session
             const user = await db.query.user.findFirst({
               where: (users, { eq: eqOp }) => eqOp(users.id, session.userId),
             });
@@ -117,7 +133,6 @@ export const auth = betterAuth({
                 lastLoginAt: new Date(),
               };
 
-              // Set firstLoginAt if it's the first time
               if (!user.firstLoginAt) {
                 updates.firstLoginAt = new Date();
               }
@@ -126,9 +141,15 @@ export const auth = betterAuth({
                 .update(schema.user)
                 .set(updates)
                 .where(eq(schema.user.id, session.userId));
+
+              // Lazy renewal for free plan credits
+              await maybeRenewFreeCredits(
+                user.id,
+                user.plan as "free" | "basic" | "pro",
+                user.creditsResetAt,
+              );
             }
           } catch (error) {
-            // Log error but don't fail session creation
             console.error("Failed to update login timestamps:", error);
           }
         },
