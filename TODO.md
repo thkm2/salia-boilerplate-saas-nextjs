@@ -3,9 +3,10 @@
 [X] - Plans + crédits (conso et affichage)
 [X] - Settings/profile
 [X] - Landing page
-[] - Stripe
-[] - Magic link
-[] - Posthog
+[X] - Magic link
+[x] - Posthog
+[] - Stripe 
+[] - Posthog events + stripe
 [] - Guide de démarrage
 
 Workflow :

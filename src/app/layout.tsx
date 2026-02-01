@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/shared/components/ui/sonner";
 import { ThemeProvider } from "@/shared/components/ui/theme-provider";
+import { PostHogProvider } from "@/shared/components/posthog-provider";
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -16,15 +17,17 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning className="scroll-smooth">
 			<body>
-				<ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-					{children}
-					<Toaster />
-				</ThemeProvider>
+				<PostHogProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+						<Toaster />
+					</ThemeProvider>
+				</PostHogProvider>
 			</body>
 		</html>
 	);

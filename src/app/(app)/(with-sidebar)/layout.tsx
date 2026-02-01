@@ -3,6 +3,7 @@ import { AppSidebar } from "./_side-bar/side-bar";
 import { SidebarInset } from "@/shared/components/ui/sidebar";
 import NavTrigger from "@/shared/components/sidebar/nav-trigger";
 import { getSession } from "@/lib/auth/guards";
+import { PostHogIdentify } from "@/shared/components/posthog-identify";
 
 export default async function AppWithSidebarLayout({
 	children,
@@ -21,6 +22,13 @@ export default async function AppWithSidebarLayout({
 
 	return (
 		<SidebarProvider>
+			<PostHogIdentify
+				userId={session?.user?.id || ""}
+				email={user.email}
+				name={user.name}
+				role={user.role}
+				plan={user.plan}
+			/>
 			<AppSidebar user={user} />
 			<SidebarInset>
 				<div className="p-3">
