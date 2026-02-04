@@ -48,12 +48,12 @@ export function UserGrowthChart({ data }: UserGrowthChartProps) {
 							<linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
 								<stop
 									offset="5%"
-									stopColor="hsl(var(--foreground))"
+									stopColor="var(--foreground)"
 									stopOpacity={0.15}
 								/>
 								<stop
 									offset="95%"
-									stopColor="hsl(var(--foreground))"
+									stopColor="var(--foreground)"
 									stopOpacity={0}
 								/>
 							</linearGradient>
@@ -66,31 +66,31 @@ export function UserGrowthChart({ data }: UserGrowthChartProps) {
 						<XAxis
 							dataKey="label"
 							className="text-xs"
-							tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+							tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
 							tickLine={false}
 							axisLine={false}
 						/>
 						<YAxis
 							className="text-xs"
-							tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+							tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
 							tickLine={false}
 							axisLine={false}
 						/>
 						<ChartTooltip
 							content={<ChartTooltipContent />}
-							cursor={{ stroke: "hsl(var(--muted-foreground))", strokeDasharray: "4 4" }}
+							cursor={{ stroke: "var(--muted-foreground)", strokeDasharray: "4 4" }}
 						/>
 						<Area
 							type="monotone"
 							dataKey="users"
-							stroke="hsl(var(--foreground))"
+							stroke="var(--foreground)"
 							strokeWidth={2}
 							fill="url(#fillUsers)"
 							dot={false}
 							activeDot={{
 								r: 5,
-								fill: "hsl(var(--background))",
-								stroke: "hsl(var(--foreground))",
+								fill: "var(--background)",
+								stroke: "var(--foreground)",
 								strokeWidth: 2,
 							}}
 						/>

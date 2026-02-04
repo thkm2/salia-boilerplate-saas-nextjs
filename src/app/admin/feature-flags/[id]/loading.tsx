@@ -1,35 +1,35 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 
 export default function FlagDetailLoading() {
 	return (
-		<div className="space-y-6 pb-6">
-			{/* Header skeleton */}
+		<div className="space-y-6 pb-8">
+			{/* Header */}
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-4">
 					<Skeleton className="h-8 w-8 rounded-md" />
 					<Skeleton className="h-11 w-11 rounded-xl" />
-					<div>
+					<div className="space-y-1">
 						<div className="flex items-center gap-2.5">
-							<Skeleton className="h-7 w-48" />
+							<Skeleton className="h-7 w-36" />
 							<Skeleton className="h-5 w-16 rounded-full" />
 						</div>
-						<Skeleton className="h-4 w-24 mt-1" />
+						<Skeleton className="h-4 w-24" />
 					</div>
 				</div>
-				<Skeleton className="h-9 w-24" />
+				<Skeleton className="h-9 w-24 rounded-md" />
 			</div>
 
+			{/* Cards Grid */}
 			<div className="grid gap-6 md:grid-cols-2">
-				{/* Info Card skeleton */}
-				<Card className="gap-4">
-					<CardHeader>
+				{/* Info Card */}
+				<div className="rounded-xl border bg-card overflow-hidden">
+					<div className="p-4 pb-2">
 						<div className="flex items-center gap-2">
 							<Skeleton className="h-7 w-7 rounded-lg" />
 							<Skeleton className="h-5 w-32" />
 						</div>
-					</CardHeader>
-					<CardContent className="space-y-0">
+					</div>
+					<div className="p-4 pt-0 space-y-0">
 						{Array.from({ length: 4 }).map((_, i) => (
 							<div key={i} className="flex items-center justify-between py-2.5">
 								<div className="flex items-center gap-2.5">
@@ -53,12 +53,12 @@ export default function FlagDetailLoading() {
 								</div>
 							))}
 						</div>
-					</CardContent>
-				</Card>
+					</div>
+				</div>
 
-				{/* Users Card skeleton */}
-				<Card className="gap-4">
-					<CardHeader>
+				{/* Users Card */}
+				<div className="rounded-xl border bg-card overflow-hidden">
+					<div className="p-4 pb-2">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								<Skeleton className="h-7 w-7 rounded-lg" />
@@ -66,8 +66,8 @@ export default function FlagDetailLoading() {
 							</div>
 							<Skeleton className="h-5 w-8 rounded-full" />
 						</div>
-					</CardHeader>
-					<CardContent>
+					</div>
+					<div className="p-4 pt-0">
 						<div className="space-y-1">
 							{Array.from({ length: 4 }).map((_, i) => (
 								<div key={i} className="flex items-center justify-between gap-3 py-2.5 px-3 -mx-3">
@@ -85,8 +85,8 @@ export default function FlagDetailLoading() {
 								</div>
 							))}
 						</div>
-					</CardContent>
-				</Card>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

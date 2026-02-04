@@ -47,26 +47,26 @@ export function PlanDistributionChart({ data }: PlanDistributionChartProps) {
 						<XAxis
 							dataKey="plan"
 							className="text-xs"
-							tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+							tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
 							tickLine={false}
 							axisLine={false}
 						/>
 						<YAxis
 							className="text-xs"
-							tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+							tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
 							tickLine={false}
 							axisLine={false}
 						/>
 						<ChartTooltip
 							content={<ChartTooltipContent />}
-							cursor={{ fill: "hsl(var(--muted))", opacity: 0.3 }}
+							cursor={{ fill: "var(--muted)", opacity: 0.3 }}
 						/>
 						<Bar dataKey="users" radius={[6, 6, 0, 0]}>
 							{data.map((entry, index) => {
 								const colors = [
-									"hsl(var(--muted-foreground))",
-									"hsl(var(--foreground) / 0.7)",
-									"hsl(var(--foreground))",
+									"var(--muted-foreground)",
+									"var(--accent-foreground)",
+									"var(--foreground)",
 								];
 								return <Cell key={`cell-${index}`} fill={colors[index]} />;
 							})}
