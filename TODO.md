@@ -12,7 +12,7 @@
 [X] - Quand on use un crédit ça actualise pas dans la sidebar
 [X] - Loading states
 [] - meilleur style admin user (User Information et Actions)
-[] - couleur dashboard admin
+[X] - couleur dashboard admin
 [] - nav-bar-b2c-mobile-first
 [] - erreur truc hydratation
 [] - Guide de démarrage

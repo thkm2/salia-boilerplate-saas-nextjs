@@ -42,7 +42,7 @@ export function PlanDistributionChart({ data }: PlanDistributionChartProps) {
 				<ChartTooltip content={<ChartTooltipContent />} />
 				<Bar dataKey="users" radius={[4, 4, 0, 0]}>
 					{data.map((entry, index) => {
-						const colors = ["#93c5fd", "#3b82f6", "#1e40af"];
+						const colors = ["#a1a1aa", "#71717a", "#3f3f46"];
 						return <Cell key={`cell-${index}`} fill={colors[index]} />;
 					})}
 				</Bar>
