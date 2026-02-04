@@ -15,7 +15,6 @@
 [X] - couleur dashboard admin
 [X] - changer icon beta, date ago pas sur, filtres pas multi
 [] - nav-bar-b2c-mobile-first
-[] - erreur truc hydratation
 [] - Guide de démarrage
 [] - Améliorer claude.md avec les règles d'architecture (reuse -> shared, etc)
 [] - SEO
