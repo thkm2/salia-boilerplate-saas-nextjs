@@ -12,7 +12,7 @@ export default async function PlansPage() {
 		session.user;
 
 	return (
-		<div className="space-y-8">
+		<div className="space-y-6">
 			<Suspense>
 				<CheckoutResult />
 			</Suspense>
