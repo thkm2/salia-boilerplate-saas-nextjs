@@ -14,7 +14,7 @@
 [X] - meilleur style admin
 [X] - couleur dashboard admin
 [X] - changer icon beta, date ago pas sur, filtres pas multi
-[] - nav-bar-b2c-mobile-first
+[X] - nav-bar-b2c-mobile-first
 [] - Stripe test
 [] - SEO
 [] - Améliorer claude.md avec les règles d'architecture (reuse -> shared, etc)

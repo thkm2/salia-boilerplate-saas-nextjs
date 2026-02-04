@@ -7,6 +7,18 @@ import { CtaSection } from "@/shared/components/landing/cta-section";
 import { FaqSectionWithCategories } from "@/shared/components/faq-categories";
 import { Footer } from "@/shared/components/landing/footer";
 import { landingContent } from "./landing.config";
+import { createMetadata } from "@/lib/seo";
+import {
+	FaqJsonLd,
+	SoftwareApplicationJsonLd,
+} from "@/shared/components/json-ld";
+
+export const metadata = createMetadata({
+	title: "SaaS Boilerplate for Next.js",
+	description:
+		"Ship faster with authentication, billing, and analytics built-in. The all-in-one Next.js 16 boilerplate.",
+	path: "/",
+});
 
 const menuItems = [
 	{ name: "Features", href: "#features" },
@@ -17,6 +29,10 @@ const menuItems = [
 const LandingPage = () => {
 	return (
 		<>
+			<FaqJsonLd items={landingContent.faq.items} />
+			<SoftwareApplicationJsonLd
+				offers={{ price: "0", priceCurrency: "USD" }}
+			/>
 			<Nav menuItems={menuItems} />
 
 			<Hero {...landingContent.hero} />
