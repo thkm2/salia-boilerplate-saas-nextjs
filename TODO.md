@@ -6,8 +6,8 @@
 [X] - Magic link
 [x] - Posthog
 [X] - Stripe 
-[] - Stripe invoice.payment_failed
-[] - Cron pour plan free ? ou affichage seul jsp
+[X] - Stripe invoice.payment_failed
+[X] - Renew free plan
 [] - Meilleur mail pour tout
 [] - Posthog events + stripe
 [] - Guide de démarrage

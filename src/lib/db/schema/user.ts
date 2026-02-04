@@ -20,6 +20,7 @@ export const user = pgTable("user", {
   stripeCustomerId: text("stripeCustomerId").unique(),
   stripeSubscriptionId: text("stripeSubscriptionId").unique(),
   creditsResetAt: timestamp("creditsResetAt"),
+  paymentFailed: boolean("paymentFailed").notNull().default(false),
 });
 
 export const session = pgTable("session", {

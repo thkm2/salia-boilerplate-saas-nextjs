@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, AlertTriangle } from "lucide-react";
 import { Progress } from "@/shared/components/ui/progress";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -14,9 +14,11 @@ import { PLANS, type PlanId } from "@/lib/plans";
 export function NavCredits({
   plan,
   credits,
+  paymentFailed,
 }: {
   plan: string;
   credits: number;
+  paymentFailed?: boolean;
 }) {
   const planId = plan as PlanId;
   const planConfig = PLANS[planId] ?? PLANS.free;
@@ -27,6 +29,15 @@ export function NavCredits({
     <SidebarMenu>
       <SidebarMenuItem>
         <div className="flex flex-col gap-2 rounded-lg bg-sidebar-accent/50 p-3">
+          {paymentFailed && (
+            <Link
+              href="/plans"
+              className="flex items-center gap-1.5 rounded-md bg-destructive/10 px-2 py-1.5 text-xs text-destructive hover:bg-destructive/20 transition-colors"
+            >
+              <AlertTriangle className="size-3 shrink-0" />
+              <span>Payment failed — update billing</span>
+            </Link>
+          )}
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-sidebar-foreground">
               Credits

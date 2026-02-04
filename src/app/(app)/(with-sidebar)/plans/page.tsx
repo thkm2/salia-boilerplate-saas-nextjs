@@ -7,7 +7,7 @@ import { CheckoutResult } from "./_components/checkout-result";
 
 export default async function PlansPage() {
   const session = await requireAuth();
-  const { plan, credits, stripeSubscriptionId } = session.user;
+  const { plan, credits, stripeSubscriptionId, paymentFailed, creditsResetAt } = session.user;
 
   return (
     <div className="space-y-8">
@@ -22,7 +22,7 @@ export default async function PlansPage() {
         </p>
       </div>
 
-      <CurrentPlanCard plan={plan} credits={credits} hasSubscription={!!stripeSubscriptionId} />
+      <CurrentPlanCard plan={plan} credits={credits} hasSubscription={!!stripeSubscriptionId} paymentFailed={paymentFailed} creditsResetAt={creditsResetAt} />
 
       <div>
         <h2 className="text-lg font-semibold mb-4">Available plans</h2>

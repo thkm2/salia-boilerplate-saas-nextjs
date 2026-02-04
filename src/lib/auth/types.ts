@@ -22,6 +22,7 @@ export interface ExtendedUser {
   stripeCustomerId?: string | null;
   stripeSubscriptionId?: string | null;
   creditsResetAt?: Date | null;
+  paymentFailed: boolean;
 }
 
 // Extended session type

@@ -51,6 +51,7 @@ export async function POST(request: Request) {
             credits: plan.credits,
             stripeSubscriptionId: subscriptionId,
             creditsResetAt: new Date(),
+            paymentFailed: false,
             updatedAt: new Date(),
           })
           .where(
@@ -107,6 +108,12 @@ export async function POST(request: Request) {
       );
 
       await db.transaction(async (tx) => {
+        // Clear payment failed flag on successful payment
+        await tx
+          .update(userTable)
+          .set({ paymentFailed: false, updatedAt: new Date() })
+          .where(eq(userTable.id, dbUser.id));
+
         const [updated] = await tx
           .update(userTable)
           .set({
@@ -222,6 +229,13 @@ export async function POST(request: Request) {
         typeof subDetails?.subscription === "string"
           ? subDetails.subscription
           : subDetails?.subscription?.id;
+
+      if (subscriptionId) {
+        await db
+          .update(userTable)
+          .set({ paymentFailed: true, updatedAt: new Date() })
+          .where(eq(userTable.stripeSubscriptionId, subscriptionId));
+      }
 
       console.error("Stripe payment failed:", {
         invoiceId: invoice.id,

@@ -5,7 +5,6 @@ import { Resend } from "resend";
 import { db } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { maybeRenewFreeCredits } from "@/lib/credits";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -102,6 +101,11 @@ export const auth = betterAuth({
         type: "date",
         required: false,
       },
+      paymentFailed: {
+        type: "boolean",
+        required: true,
+        defaultValue: false,
+      },
     },
   },
 
@@ -141,13 +145,6 @@ export const auth = betterAuth({
                 .update(schema.user)
                 .set(updates)
                 .where(eq(schema.user.id, session.userId));
-
-              // Lazy renewal for free plan credits
-              await maybeRenewFreeCredits(
-                user.id,
-                user.plan as "free" | "basic" | "pro",
-                user.creditsResetAt,
-              );
             }
           } catch (error) {
             console.error("Failed to update login timestamps:", error);

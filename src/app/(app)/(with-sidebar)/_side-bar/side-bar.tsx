@@ -25,6 +25,7 @@ type User = {
 	role: string;
 	plan: string;
 	credits: number;
+	paymentFailed?: boolean;
 };
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
@@ -77,7 +78,7 @@ export function AppSidebar({ user, ...sidebarProps }: AppSidebarProps) {
 				{/*<NavSecondary items={data.navSecondary} className="mt-auto" />*/}
 			</SidebarContent>
 			<SidebarFooter>
-				<NavCredits plan={user.plan} credits={user.credits} />
+				<NavCredits plan={user.plan} credits={user.credits} paymentFailed={user.paymentFailed} />
 				<NavUser user={user} />
 			</SidebarFooter>
 		</Sidebar>
