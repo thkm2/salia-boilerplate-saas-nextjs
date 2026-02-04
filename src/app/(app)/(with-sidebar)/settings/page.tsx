@@ -4,6 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 import { PLANS, type PlanId } from "@/lib/plans";
 import { DeleteAccountCard } from "./_components/delete-account-card";
+import { PageHeader } from "@/shared/components/ui/page-header";
 import {
 	Settings,
 	User,
@@ -90,24 +91,11 @@ export default async function SettingsPage() {
 
 	return (
 		<div className="space-y-6">
-			{/* Header */}
-			<div className="flex items-start justify-between">
-				<div className="space-y-1">
-					<div className="flex items-center gap-3">
-						<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/5 ring-1 ring-foreground/10">
-							<Settings className="h-5 w-5 text-foreground/70" />
-						</div>
-						<div>
-							<h1 className="text-2xl font-semibold tracking-tight">
-								Settings
-							</h1>
-							<p className="text-sm text-muted-foreground">
-								Manage your account and preferences
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
+			<PageHeader
+				icon={Settings}
+				title="Settings"
+				description="Manage your account and preferences"
+			/>
 
 			{/* Profile Card */}
 			<Card className="overflow-hidden shadow-xs">

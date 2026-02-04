@@ -1,21 +1,15 @@
 import { LayoutDashboard } from "lucide-react";
+import { PageHeader } from "@/shared/components/ui/page-header";
 import { TestCreditButton } from "./_components/test-credit-button";
 
 export default function DashboardPage() {
 	return (
 		<div className="space-y-6">
-			{/* Header */}
-			<div className="flex items-center gap-3">
-				<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/5 ring-1 ring-foreground/10">
-					<LayoutDashboard className="h-5 w-5 text-foreground/70" />
-				</div>
-				<div>
-					<h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-					<p className="text-sm text-muted-foreground">
-						Overview of your activity
-					</p>
-				</div>
-			</div>
+			<PageHeader
+				icon={LayoutDashboard}
+				title="Dashboard"
+				description="Overview of your activity"
+			/>
 
 			{/* Content */}
 			<div>

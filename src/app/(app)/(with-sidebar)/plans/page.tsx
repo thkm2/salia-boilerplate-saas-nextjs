@@ -4,6 +4,7 @@ import { PLANS, type PlanId } from "@/lib/plans";
 import { CurrentPlanCard } from "./_components/current-plan-card";
 import { PlanCard } from "./_components/plan-card";
 import { CheckoutResult } from "./_components/checkout-result";
+import { PageHeader } from "@/shared/components/ui/page-header";
 import { CreditCard } from "lucide-react";
 
 export default async function PlansPage() {
@@ -17,20 +18,11 @@ export default async function PlansPage() {
 				<CheckoutResult />
 			</Suspense>
 
-			{/* Header */}
-			<div className="flex items-center gap-3">
-				<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/5 ring-1 ring-foreground/10">
-					<CreditCard className="h-5 w-5 text-foreground/70" />
-				</div>
-				<div>
-					<h1 className="text-2xl font-semibold tracking-tight">
-						Plans & Billing
-					</h1>
-					<p className="text-sm text-muted-foreground">
-						Manage your subscription and credits
-					</p>
-				</div>
-			</div>
+			<PageHeader
+				icon={CreditCard}
+				title="Plans & Billing"
+				description="Manage your subscription and credits"
+			/>
 
 			{/* Current Plan Details */}
 			<CurrentPlanCard
