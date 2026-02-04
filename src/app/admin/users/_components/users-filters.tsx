@@ -3,15 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition, useCallback, useRef } from "react";
 import { Input } from "@/shared/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/shared/components/ui/toggle-group";
 import { Button } from "@/shared/components/ui/button";
-import { Search, X, Filter, Shield, Crown, Sparkles, User } from "lucide-react";
+import { Search, X, Filter, Shield, Crown, FlaskConical, User } from "lucide-react";
 
 export function UsersFilters() {
 	const router = useRouter();
@@ -21,17 +15,55 @@ export function UsersFilters() {
 
 	const activeFilters = {
 		search: searchParams.get("search"),
-		role: searchParams.get("role"),
-		plan: searchParams.get("plan"),
+		roles: searchParams.get("role")?.split(",").filter(Boolean) ?? [],
+		plans: searchParams.get("plan")?.split(",").filter(Boolean) ?? [],
 	};
 
-	const hasActiveFilters = activeFilters.search || activeFilters.role || activeFilters.plan;
+	const hasActiveFilters = activeFilters.search || activeFilters.roles.length > 0 || activeFilters.plans.length > 0;
 
 	const updateParams = useCallback(
 		(key: string, value: string) => {
 			const params = new URLSearchParams(searchParams.toString());
-			if (value && value !== "all") {
+			if (value) {
 				params.set(key, value);
+			} else {
+				params.delete(key);
+			}
+			params.delete("page");
+			startTransition(() => {
+				router.push(`/admin/users?${params.toString()}`);
+			});
+		},
+		[router, searchParams, startTransition],
+	);
+
+	const updateMultiParam = useCallback(
+		(key: string, values: string[]) => {
+			const params = new URLSearchParams(searchParams.toString());
+			if (values.length > 0) {
+				params.set(key, values.join(","));
+			} else {
+				params.delete(key);
+			}
+			params.delete("page");
+			startTransition(() => {
+				router.push(`/admin/users?${params.toString()}`);
+			});
+		},
+		[router, searchParams, startTransition],
+	);
+
+	const removeFilter = useCallback(
+		(key: string, value?: string) => {
+			const params = new URLSearchParams(searchParams.toString());
+			if (value) {
+				const current = params.get(key)?.split(",").filter(Boolean) ?? [];
+				const updated = current.filter((v) => v !== value);
+				if (updated.length > 0) {
+					params.set(key, updated.join(","));
+				} else {
+					params.delete(key);
+				}
 			} else {
 				params.delete(key);
 			}
@@ -78,75 +110,55 @@ export function UsersFilters() {
 					)}
 				</div>
 
-				{/* Filter Selects */}
-				<div className="flex items-center gap-2">
+				{/* Filter Toggle Groups */}
+				<div className="flex items-center gap-3 flex-wrap">
 					<div className="flex items-center gap-1.5 text-muted-foreground">
 						<Filter className="h-4 w-4" />
 					</div>
 
-					<Select
-						value={activeFilters.role ?? "all"}
-						onValueChange={(value) => updateParams("role", value)}
+					{/* Role Filter */}
+					<ToggleGroup
+						type="multiple"
+						value={activeFilters.roles}
+						onValueChange={(values) => updateMultiParam("role", values)}
+						variant="outline"
+						size="sm"
 					>
-						<SelectTrigger className={`w-[140px] transition-all ${activeFilters.role ? "ring-2 ring-foreground/10 bg-foreground/5" : ""}`}>
-							<SelectValue placeholder="Role" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">
-								<span className="flex items-center gap-2">
-									All Roles
-								</span>
-							</SelectItem>
-							<SelectItem value="admin">
-								<span className="flex items-center gap-2">
-									<Shield className="h-3.5 w-3.5 text-amber-500" />
-									Admin
-								</span>
-							</SelectItem>
-							<SelectItem value="user">
-								<span className="flex items-center gap-2">
-									<User className="h-3.5 w-3.5 text-muted-foreground" />
-									User
-								</span>
-							</SelectItem>
-							<SelectItem value="beta">
-								<span className="flex items-center gap-2">
-									<Sparkles className="h-3.5 w-3.5 text-purple-500" />
-									Beta
-								</span>
-							</SelectItem>
-						</SelectContent>
-					</Select>
+						<ToggleGroupItem value="admin" className="gap-1.5">
+							<Shield className="h-3.5 w-3.5 text-amber-500" />
+							Admin
+						</ToggleGroupItem>
+						<ToggleGroupItem value="user" className="gap-1.5">
+							<User className="h-3.5 w-3.5 text-muted-foreground" />
+							User
+						</ToggleGroupItem>
+						<ToggleGroupItem value="beta" className="gap-1.5">
+							<FlaskConical className="h-3.5 w-3.5 text-purple-500" />
+							Beta
+						</ToggleGroupItem>
+					</ToggleGroup>
 
-					<Select
-						value={activeFilters.plan ?? "all"}
-						onValueChange={(value) => updateParams("plan", value)}
+					{/* Plan Filter */}
+					<ToggleGroup
+						type="multiple"
+						value={activeFilters.plans}
+						onValueChange={(values) => updateMultiParam("plan", values)}
+						variant="outline"
+						size="sm"
 					>
-						<SelectTrigger className={`w-[140px] transition-all ${activeFilters.plan ? "ring-2 ring-foreground/10 bg-foreground/5" : ""}`}>
-							<SelectValue placeholder="Plan" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All Plans</SelectItem>
-							<SelectItem value="free">
-								<span className="flex items-center gap-2">
-									<span className="h-2 w-2 rounded-full bg-muted-foreground" />
-									Free
-								</span>
-							</SelectItem>
-							<SelectItem value="basic">
-								<span className="flex items-center gap-2">
-									<span className="h-2 w-2 rounded-full bg-blue-500" />
-									Basic
-								</span>
-							</SelectItem>
-							<SelectItem value="pro">
-								<span className="flex items-center gap-2">
-									<Crown className="h-3.5 w-3.5 text-amber-500" />
-									Pro
-								</span>
-							</SelectItem>
-						</SelectContent>
-					</Select>
+						<ToggleGroupItem value="free" className="gap-1.5">
+							<span className="h-2 w-2 rounded-full bg-muted-foreground" />
+							Free
+						</ToggleGroupItem>
+						<ToggleGroupItem value="basic" className="gap-1.5">
+							<span className="h-2 w-2 rounded-full bg-blue-500" />
+							Basic
+						</ToggleGroupItem>
+						<ToggleGroupItem value="pro" className="gap-1.5">
+							<Crown className="h-3.5 w-3.5 text-amber-500" />
+							Pro
+						</ToggleGroupItem>
+					</ToggleGroup>
 				</div>
 			</div>
 
@@ -161,18 +173,22 @@ export function UsersFilters() {
 							onRemove={() => updateParams("search", "")}
 						/>
 					)}
-					{activeFilters.role && (
+					{activeFilters.roles.map((role) => (
 						<FilterPill
-							label={`Role: ${activeFilters.role}`}
-							onRemove={() => updateParams("role", "all")}
+							key={role}
+							label={role}
+							icon={getRoleIcon(role)}
+							onRemove={() => removeFilter("role", role)}
 						/>
-					)}
-					{activeFilters.plan && (
+					))}
+					{activeFilters.plans.map((plan) => (
 						<FilterPill
-							label={`Plan: ${activeFilters.plan}`}
-							onRemove={() => updateParams("plan", "all")}
+							key={plan}
+							label={plan}
+							icon={getPlanIcon(plan)}
+							onRemove={() => removeFilter("plan", plan)}
 						/>
-					)}
+					))}
 
 					<Button
 						variant="ghost"
@@ -189,15 +205,44 @@ export function UsersFilters() {
 	);
 }
 
+function getRoleIcon(role: string) {
+	switch (role) {
+		case "admin":
+			return <Shield className="h-3 w-3 text-amber-500" />;
+		case "beta":
+			return <FlaskConical className="h-3 w-3 text-purple-500" />;
+		case "user":
+			return <User className="h-3 w-3 text-muted-foreground" />;
+		default:
+			return null;
+	}
+}
+
+function getPlanIcon(plan: string) {
+	switch (plan) {
+		case "pro":
+			return <Crown className="h-3 w-3 text-amber-500" />;
+		case "basic":
+			return <span className="h-2 w-2 rounded-full bg-blue-500" />;
+		case "free":
+			return <span className="h-2 w-2 rounded-full bg-muted-foreground" />;
+		default:
+			return null;
+	}
+}
+
 function FilterPill({
 	label,
+	icon,
 	onRemove,
 }: {
 	label: string;
+	icon?: React.ReactNode;
 	onRemove: () => void;
 }) {
 	return (
-		<span className="inline-flex items-center gap-1 rounded-full bg-foreground/5 px-2.5 py-1 text-xs font-medium ring-1 ring-inset ring-foreground/10">
+		<span className="inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2.5 py-1 text-xs font-medium ring-1 ring-inset ring-foreground/10 capitalize">
+			{icon}
 			{label}
 			<button
 				onClick={onRemove}

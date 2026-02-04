@@ -8,7 +8,8 @@ import {
 } from "@/shared/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import Link from "next/link";
-import { Shield, Sparkles, Crown, ChevronRight, Coins } from "lucide-react";
+import { Shield, FlaskConical, Crown, ChevronRight, Coins } from "lucide-react";
+import { formatRelativeDate } from "@/shared/utils/format-date";
 
 interface UserRow {
 	id: string;
@@ -30,7 +31,7 @@ function RoleBadge({ role }: { role: string }) {
 			className: "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-amber-500/20",
 		},
 		beta: {
-			icon: Sparkles,
+			icon: FlaskConical,
 			label: "Beta",
 			className: "bg-purple-500/10 text-purple-600 dark:text-purple-400 ring-purple-500/20",
 		},
@@ -86,21 +87,6 @@ function PlanBadge({ plan }: { plan: string }) {
 			{config.label}
 		</span>
 	);
-}
-
-function formatRelativeDate(date: Date | null): string {
-	if (!date) return "Never";
-
-	const now = new Date();
-	const diff = now.getTime() - new Date(date).getTime();
-	const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-	if (days === 0) return "Today";
-	if (days === 1) return "Yesterday";
-	if (days < 7) return `${days}d ago`;
-	if (days < 30) return `${Math.floor(days / 7)}w ago`;
-	if (days < 365) return `${Math.floor(days / 30)}mo ago`;
-	return `${Math.floor(days / 365)}y ago`;
 }
 
 export function UsersTable({ users }: { users: UserRow[] }) {

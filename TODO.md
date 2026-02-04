@@ -13,7 +13,7 @@
 [X] - Loading states
 [X] - meilleur style admin
 [X] - couleur dashboard admin
-[] - changer icon beta, enlever card users, date ago pas sur, filtres pas multi
+[X] - changer icon beta, date ago pas sur, filtres pas multi
 [] - nav-bar-b2c-mobile-first
 [] - erreur truc hydratation
 [] - Guide de démarrage

@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/ui/empty";
 import { toast } from "sonner";
 import { Users, UserMinus, Loader2, ExternalLink } from "lucide-react";
+import { formatRelativeDate } from "@/shared/utils/format-date";
 import Link from "next/link";
 import { unassignFlagFromUser } from "@/shared/actions/feature-flags";
 
@@ -84,26 +85,7 @@ function UserRow({ user, flagId }: { user: AssignedUser; flagId: string }) {
 		.toUpperCase()
 		.slice(0, 2);
 
-	const assignedDate = new Date(user.assignedAt);
-	const now = new Date();
-	const diffMs = now.getTime() - assignedDate.getTime();
-	const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-	let assignedRelative: string;
-	if (diffDays === 0) {
-		assignedRelative = "Today";
-	} else if (diffDays === 1) {
-		assignedRelative = "Yesterday";
-	} else if (diffDays < 7) {
-		assignedRelative = `${diffDays}d ago`;
-	} else if (diffDays < 30) {
-		assignedRelative = `${Math.floor(diffDays / 7)}w ago`;
-	} else {
-		assignedRelative = assignedDate.toLocaleDateString("en-US", {
-			month: "short",
-			day: "numeric",
-		});
-	}
+	const assignedRelative = formatRelativeDate(user.assignedAt);
 
 	const handleUnassign = () => {
 		startTransition(async () => {

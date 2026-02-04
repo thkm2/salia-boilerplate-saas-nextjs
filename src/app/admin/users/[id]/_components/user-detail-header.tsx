@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { ArrowLeft, Shield, Sparkles, Crown, Mail } from "lucide-react";
+import { ArrowLeft, Shield, FlaskConical, Crown, Mail } from "lucide-react";
 import Link from "next/link";
 
 interface UserDetailHeaderProps {
@@ -19,7 +19,7 @@ function RoleBadge({ role }: { role: string }) {
 			className: "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-amber-500/20",
 		},
 		beta: {
-			icon: Sparkles,
+			icon: FlaskConical,
 			label: "Beta",
 			className: "bg-purple-500/10 text-purple-600 dark:text-purple-400 ring-purple-500/20",
 		},

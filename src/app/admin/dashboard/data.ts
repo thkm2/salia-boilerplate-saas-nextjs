@@ -2,6 +2,7 @@ import { cache } from "react";
 import { db } from "@/lib/db";
 import { user, session, creditTransaction } from "@/lib/db/schema";
 import { count, desc, eq, gte, sql, and } from "drizzle-orm";
+import { formatRelativeDate } from "@/shared/utils/format-date";
 
 /**
  * Get total number of users
@@ -131,19 +132,6 @@ export const getRecentUsers = cache(async (limit: number = 20): Promise<
 
 	return users.map((u) => {
 		const isPaid = u.plan !== "free";
-		const now = new Date();
-		const diffMs = now.getTime() - u.createdAt.getTime();
-		const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-		const diffDays = Math.floor(diffHours / 24);
-
-		let date: string;
-		if (diffHours < 1) {
-			date = "Just now";
-		} else if (diffHours < 24) {
-			date = `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
-		} else {
-			date = `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-		}
 
 		return {
 			id: u.id,
@@ -151,7 +139,7 @@ export const getRecentUsers = cache(async (limit: number = 20): Promise<
 			email: u.email,
 			plan: u.plan.charAt(0).toUpperCase() + u.plan.slice(1),
 			isPaid,
-			date,
+			date: formatRelativeDate(u.createdAt, "long"),
 		};
 	});
 });
@@ -243,23 +231,6 @@ export const getRecentCreditActions = cache(async (limit: number = 20): Promise<
 		.limit(limit);
 
 	return transactions.map((t) => {
-		const now = new Date();
-		const diffMs = now.getTime() - t.createdAt.getTime();
-		const diffMinutes = Math.floor(diffMs / (1000 * 60));
-		const diffHours = Math.floor(diffMinutes / 60);
-		const diffDays = Math.floor(diffHours / 24);
-
-		let date: string;
-		if (diffMinutes < 1) {
-			date = "Just now";
-		} else if (diffMinutes < 60) {
-			date = `${diffMinutes} min ago`;
-		} else if (diffHours < 24) {
-			date = `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
-		} else {
-			date = `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-		}
-
 		// Format action name
 		const action =
 			t.description ||
@@ -273,7 +244,7 @@ export const getRecentCreditActions = cache(async (limit: number = 20): Promise<
 			user: t.email,
 			action,
 			credits: t.amount,
-			date,
+			date: formatRelativeDate(t.createdAt, "long"),
 		};
 	});
 });

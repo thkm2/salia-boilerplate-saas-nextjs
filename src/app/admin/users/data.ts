@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
-import { count, desc, eq, ilike, or, and, gte } from "drizzle-orm";
+import { count, desc, eq, ilike, or, and, gte, inArray } from "drizzle-orm";
 import { requireRole } from "@/lib/auth/guards";
 
 const USERS_PER_PAGE = 20;
@@ -63,11 +63,21 @@ export const getUsers = cache(
 		}
 
 		if (role && role !== "all") {
-			conditions.push(eq(user.role, role));
+			const roles = role.split(",").filter(Boolean);
+			if (roles.length === 1) {
+				conditions.push(eq(user.role, roles[0]));
+			} else if (roles.length > 1) {
+				conditions.push(inArray(user.role, roles));
+			}
 		}
 
 		if (plan && plan !== "all") {
-			conditions.push(eq(user.plan, plan));
+			const plans = plan.split(",").filter(Boolean);
+			if (plans.length === 1) {
+				conditions.push(eq(user.plan, plans[0]));
+			} else if (plans.length > 1) {
+				conditions.push(inArray(user.plan, plans));
+			}
 		}
 
 		const where = conditions.length > 0 ? and(...conditions) : undefined;

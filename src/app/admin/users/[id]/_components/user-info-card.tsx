@@ -11,6 +11,7 @@ import {
 	CalendarCheck,
 } from "lucide-react";
 import { CopyButton } from "@/shared/components/copy-button";
+import { formatDateWithTimestamp } from "@/shared/utils/format-date";
 
 interface UserInfoCardProps {
 	user: {
@@ -164,42 +165,17 @@ function InfoRow({
 }
 
 function TimeDisplay({ date }: { date: Date | null }) {
-	if (!date) {
+	const formatted = formatDateWithTimestamp(date);
+
+	if (!formatted) {
 		return <span className="text-sm text-muted-foreground italic">Never</span>;
-	}
-
-	const d = new Date(date);
-	const now = new Date();
-	const diffMs = now.getTime() - d.getTime();
-	const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-	let relative: string;
-	if (diffDays === 0) {
-		relative = "Today";
-	} else if (diffDays === 1) {
-		relative = "Yesterday";
-	} else if (diffDays < 7) {
-		relative = `${diffDays} days ago`;
-	} else if (diffDays < 30) {
-		relative = `${Math.floor(diffDays / 7)} weeks ago`;
-	} else {
-		relative = d.toLocaleDateString("en-US", {
-			month: "short",
-			day: "numeric",
-			year: d.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
-		});
 	}
 
 	return (
 		<div className="flex flex-col items-end">
-			<span className="text-sm font-medium">{relative}</span>
+			<span className="text-sm font-medium">{formatted.relative}</span>
 			<span className="text-[11px] text-muted-foreground tabular-nums">
-				{d.toLocaleString("en-US", {
-					month: "short",
-					day: "numeric",
-					hour: "2-digit",
-					minute: "2-digit",
-				})}
+				{formatted.timestamp}
 			</span>
 		</div>
 	);
