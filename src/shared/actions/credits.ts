@@ -5,6 +5,7 @@ import { creditTransaction, user } from "@/lib/db/schema";
 import { requireAuth } from "@/lib/auth/guards";
 import { eq, sql } from "drizzle-orm";
 import { maybeRenewFreeCredits } from "@/lib/credits";
+import { revalidatePath } from "next/cache";
 
 export async function useCredits(
   amount: number,
@@ -47,6 +48,10 @@ export async function useCredits(
     return { success: true as const };
   });
 
+  if ("success" in result) {
+    revalidatePath("/", "layout");
+  }
+
   return result;
 }
 
@@ -73,4 +78,6 @@ export async function grantCredits(
       description: description ?? null,
     });
   });
+
+  revalidatePath("/", "layout");
 }
