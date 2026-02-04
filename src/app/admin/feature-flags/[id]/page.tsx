@@ -22,7 +22,7 @@ const FeatureFlagDetailPage = async ({
 
 	return (
 		<div className="space-y-6 pb-6">
-			<FlagDetailHeader flagId={flag.id} name={flag.name} />
+			<FlagDetailHeader flagId={flag.id} name={flag.name} enabled={flag.enabled} />
 
 			<div className="grid gap-6 md:grid-cols-2">
 				<FlagInfoCard flag={flag} />

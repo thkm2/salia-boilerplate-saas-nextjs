@@ -11,11 +11,12 @@
 [X] - Meilleur mail
 [X] - Quand on use un crédit ça actualise pas dans la sidebar
 [X] - Loading states
-[] - meilleur style admin user (User Information et Actions)
+[X] - meilleur style admin user (User Information et Actions)
 [X] - couleur dashboard admin
 [] - nav-bar-b2c-mobile-first
 [] - erreur truc hydratation
 [] - Guide de démarrage
+[] - Améliorer claude.md avec les règles d'architecture (reuse -> shared, etc)
 [] - SEO
 
 Workflow :
