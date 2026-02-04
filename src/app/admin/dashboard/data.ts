@@ -157,6 +157,66 @@ export const getRecentUsers = cache(async (limit: number = 20): Promise<
 });
 
 /**
+ * Get dashboard stats for header
+ */
+export const getDashboardStats = cache(async (): Promise<{
+	totalUsers: number;
+	activeUsers: number;
+	growthRate: number;
+	totalCreditsUsed: number;
+}> => {
+	const now = new Date();
+	const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+	const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+	// Total users
+	const totalResult = await db.select({ count: count() }).from(user);
+	const totalUsers = totalResult[0]?.count ?? 0;
+
+	// Active users (last 30 days)
+	const activeUsersQuery = await db
+		.selectDistinct({ userId: creditTransaction.userId })
+		.from(creditTransaction)
+		.where(
+			and(
+				gte(creditTransaction.createdAt, thirtyDaysAgo),
+				sql`${creditTransaction.amount} < 0`,
+			),
+		);
+	const activeUsers = activeUsersQuery.length;
+
+	// Growth rate: compare new users last 30 days vs previous 30 days
+	const newUsersLast30 = await db
+		.select({ count: count() })
+		.from(user)
+		.where(gte(user.createdAt, thirtyDaysAgo));
+	const newUsersPrev30 = await db
+		.select({ count: count() })
+		.from(user)
+		.where(
+			and(
+				gte(user.createdAt, sixtyDaysAgo),
+				sql`${user.createdAt} < ${thirtyDaysAgo}`,
+			),
+		);
+
+	const current = newUsersLast30[0]?.count ?? 0;
+	const previous = newUsersPrev30[0]?.count ?? 0;
+	const growthRate =
+		previous > 0 ? Math.round(((current - previous) / previous) * 100) : current > 0 ? 100 : 0;
+
+	// Total credits used (sum of negative transactions)
+	const creditsResult = await db
+		.select({
+			total: sql<number>`COALESCE(ABS(SUM(CASE WHEN ${creditTransaction.amount} < 0 THEN ${creditTransaction.amount} ELSE 0 END)), 0)`,
+		})
+		.from(creditTransaction);
+	const totalCreditsUsed = Math.round(Number(creditsResult[0]?.total) || 0);
+
+	return { totalUsers, activeUsers, growthRate, totalCreditsUsed };
+});
+
+/**
  * Get recent credit actions (last 20 by default)
  */
 export const getRecentCreditActions = cache(async (limit: number = 20): Promise<
