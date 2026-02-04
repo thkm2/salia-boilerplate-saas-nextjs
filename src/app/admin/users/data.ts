@@ -1,10 +1,37 @@
 import { cache } from "react";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
-import { count, desc, eq, ilike, or, and } from "drizzle-orm";
+import { count, desc, eq, ilike, or, and, gte } from "drizzle-orm";
 import { requireRole } from "@/lib/auth/guards";
 
 const USERS_PER_PAGE = 20;
+
+export const getUsersStats = cache(async () => {
+	await requireRole("admin");
+
+	const now = new Date();
+	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+	const startOfWeek = new Date(startOfToday);
+	startOfWeek.setDate(startOfWeek.getDate() - 7);
+
+	const [activeTodayResult, newThisWeekResult] = await Promise.all([
+		db
+			.select({ count: count() })
+			.from(user)
+			.where(gte(user.lastLoginAt, startOfToday))
+			.then((r) => r[0]?.count ?? 0),
+		db
+			.select({ count: count() })
+			.from(user)
+			.where(gte(user.createdAt, startOfWeek))
+			.then((r) => r[0]?.count ?? 0),
+	]);
+
+	return {
+		activeToday: activeTodayResult,
+		newThisWeek: newThisWeekResult,
+	};
+});
 
 function escapeIlike(value: string) {
 	return value.replace(/[%_\\]/g, "\\$&");

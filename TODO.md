@@ -11,8 +11,9 @@
 [X] - Meilleur mail
 [X] - Quand on use un crédit ça actualise pas dans la sidebar
 [X] - Loading states
-[X] - meilleur style admin user (User Information et Actions)
+[X] - meilleur style admin
 [X] - couleur dashboard admin
+[] - changer icon beta, enlever card users, date ago pas sur, filtres pas multi
 [] - nav-bar-b2c-mobile-first
 [] - erreur truc hydratation
 [] - Guide de démarrage

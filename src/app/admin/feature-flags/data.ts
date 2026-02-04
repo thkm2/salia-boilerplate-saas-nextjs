@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { db } from "@/lib/db";
 import { featureFlag, userFeatureFlag, user } from "@/lib/db/schema";
-import { count, desc, eq } from "drizzle-orm";
+import { count, desc, eq, countDistinct } from "drizzle-orm";
 import { requireRole } from "@/lib/auth/guards";
 
 export const getFeatureFlags = cache(async () => {
@@ -22,6 +22,27 @@ export const getFeatureFlags = cache(async () => {
 		.orderBy(desc(featureFlag.createdAt));
 
 	return flags;
+});
+
+export const getFeatureFlagsStats = cache(async () => {
+	await requireRole("admin");
+
+	const [enabledCountResult, totalUsersResult] = await Promise.all([
+		db
+			.select({ count: count() })
+			.from(featureFlag)
+			.where(eq(featureFlag.enabled, true))
+			.then((r) => r[0]?.count ?? 0),
+		db
+			.select({ count: countDistinct(userFeatureFlag.userId) })
+			.from(userFeatureFlag)
+			.then((r) => r[0]?.count ?? 0),
+	]);
+
+	return {
+		enabledCount: enabledCountResult,
+		totalUsers: totalUsersResult,
+	};
 });
 
 export const getFeatureFlagById = cache(async (id: string) => {

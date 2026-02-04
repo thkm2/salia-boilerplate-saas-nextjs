@@ -29,6 +29,8 @@ const AdminUserDetailPage = async ({
 				name={userData.name}
 				email={userData.email}
 				image={userData.image}
+				role={userData.role}
+				plan={userData.plan}
 			/>
 
 			<div className="grid gap-6 md:grid-cols-2">
