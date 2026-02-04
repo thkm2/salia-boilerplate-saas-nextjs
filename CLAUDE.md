@@ -76,6 +76,13 @@ src/
 2. Infrastructure (DB/Auth)? → `lib/`
 3. Shared business code? → `shared/`
 
+### Route File Conventions
+
+| File | When to use |
+|------|-------------|
+| `loading.tsx` | Routes with data fetching (`await` in page). Use `Skeleton` components matching page layout. |
+| `_components/` | Route-specific components. Underscore prefix = private (not routable). Kebab-case files, PascalCase exports. |
+
 **📖 For detailed architecture guidelines, see [md/ARCHITECTURE.md](md/ARCHITECTURE.md)**
 
 ### Auth vs Authorization Pattern
