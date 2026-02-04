@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { db } from "@/lib/db";
-import { user, session, creditTransaction } from "@/lib/db/schema";
+import { user, creditTransaction } from "@/lib/db/schema";
 import { count, desc, eq, gte, sql, and } from "drizzle-orm";
 import { formatRelativeDate } from "@/shared/utils/format-date";
 

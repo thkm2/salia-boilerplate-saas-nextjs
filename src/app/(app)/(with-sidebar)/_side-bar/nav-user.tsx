@@ -1,12 +1,10 @@
 "use client";
 
 import {
-	BellIcon,
 	SunIcon,
 	MoonIcon,
 	LogOutIcon,
 	MoreVerticalIcon,
-	UserCircleIcon,
 	CreditCardIcon,
 	SettingsIcon,
 	BrickWallShieldIcon,

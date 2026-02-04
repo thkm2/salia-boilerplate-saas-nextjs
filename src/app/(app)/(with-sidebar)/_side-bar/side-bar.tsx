@@ -2,7 +2,7 @@
 import * as React from "react";
 import { List, LayoutDashboard, CircleDashed, BadgeQuestionMark } from "lucide-react";
 import { NavMain } from "@/shared/components/sidebar/nav-main";
-import { NavSecondary } from "@/shared/components/sidebar/nav-secondary";
+// import { NavSecondary } from "@/shared/components/sidebar/nav-secondary";
 import { NavUser } from "./nav-user";
 import { NavCredits } from "./nav-credits";
 import {

@@ -7,7 +7,7 @@ import { eq, sql } from "drizzle-orm";
 import { maybeRenewFreeCredits } from "@/lib/credits";
 import { revalidatePath } from "next/cache";
 
-export async function useCredits(
+export async function consumeCredits(
   amount: number,
   type: string,
   description?: string

@@ -35,9 +35,10 @@ export default function AuthPage() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
-		if (localStorage.getItem(AUTH_STORAGE_KEY)) {
-			setMode("signin");
-		}
+		const hasAccount = localStorage.getItem(AUTH_STORAGE_KEY);
+		// Intentional: initialize state from localStorage on mount
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		if (hasAccount) setMode("signin");
 		setReady(true);
 	}, []);
 	const [magicLinkState, setMagicLinkState] = useState<

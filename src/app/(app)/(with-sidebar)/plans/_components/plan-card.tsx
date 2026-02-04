@@ -63,7 +63,7 @@ export function PlanCard({
 
   function getButtonConfig(): { label: string; action: () => void; disabled: boolean; variant: "default" | "outline" } {
     if (isCurrent) {
-      return { label: "Current plan", action: () => {}, disabled: true, variant: "outline" };
+      return { label: "Current plan", action: () => {}, disabled: false, variant: "outline" };
     }
     if (isPaidPlan && !isOnPaidPlan) {
       // Free user upgrading to paid

@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { Button } from "@/shared/components/ui/button";
-import { useCredits } from "@/shared/actions/credits";
+import { consumeCredits } from "@/shared/actions/credits";
 import { toast } from "sonner";
 
 export function TestCreditButton() {
@@ -13,7 +13,7 @@ export function TestCreditButton() {
 			disabled={pending}
 			onClick={() => {
 				startTransition(async () => {
-					const result = await useCredits(1, "test", "Test button");
+					const result = await consumeCredits(1, "test", "Test button");
 					if ("error" in result) {
 						toast.error("Crédits insuffisants");
 					} else {
