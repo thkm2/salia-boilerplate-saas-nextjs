@@ -17,7 +17,9 @@
 [X] - nav-bar-b2c-mobile-first
 [X] - SEO
 [X] - Améliorer claude.md avec les règles d'architecture (reuse -> shared, etc)
-[] - Stripe test
+[X] - Stripe test
+[] - Gestion de fichier avec Cloudflare R2 (s'inspirer de salia-invite) mais façon boilerplate
+[] - rate limiting
 
 
 Workflow :
