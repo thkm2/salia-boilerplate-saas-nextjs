@@ -15,6 +15,13 @@
       "when": 1770196208050,
       "tag": "0001_smooth_lord_hawal",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770286937090,
+      "tag": "0002_uneven_red_skull",
+      "breakpoints": true
     }
   ]
 }
