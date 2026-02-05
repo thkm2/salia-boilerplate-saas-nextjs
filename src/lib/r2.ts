@@ -96,12 +96,14 @@ export function generateFileKey(
 export async function getUploadUrl(
   key: string,
   contentType: string,
+  size: number,
   expiresIn: number = 3600 // 1 hour default
 ): Promise<string> {
   const command = new PutObjectCommand({
     Bucket: getBucketName(),
     Key: key,
     ContentType: contentType,
+    ContentLength: size,
   });
 
   return getSignedUrl(getR2Client(), command, { expiresIn });

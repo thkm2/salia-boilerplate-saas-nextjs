@@ -12,5 +12,4 @@ export const file = pgTable("file", {
   size: integer("size").notNull(), // Size in bytes
   visibility: text("visibility").notNull().default("private"), // "public" or "private"
   uploadedAt: timestamp("uploadedAt").notNull().defaultNow(),
-  deletedAt: timestamp("deletedAt"), // Soft delete (null = active)
 });

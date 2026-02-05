@@ -3,13 +3,14 @@
 import { db } from "@/lib/db";
 import { file } from "@/lib/db/schema";
 import { requireAuth } from "@/lib/auth/guards";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import {
   generateFileKey,
   getUploadUrl,
   getDownloadUrl,
   getPublicUrl,
   deleteFromR2,
+  fileExistsInR2,
   validateFile,
   type FileVisibility,
   type FileValidationOptions,
@@ -25,12 +26,16 @@ interface RequestUploadUrlInput {
 
 interface RequestUploadUrlResult {
   uploadUrl: string;
-  fileId: string;
   key: string;
+  filename: string;
+  contentType: string;
+  size: number;
+  visibility: FileVisibility;
 }
 
 /**
  * Request a presigned URL for uploading a file
+ * Returns metadata needed for confirmUpload (no DB record created yet)
  */
 export async function requestUploadUrl(
   input: RequestUploadUrlInput
@@ -52,7 +57,58 @@ export async function requestUploadUrl(
   // Generate unique key
   const key = generateFileKey(userId, filename, visibility);
 
-  // Create file record in database (pending upload)
+  // Generate presigned upload URL with size enforcement
+  const uploadUrl = await getUploadUrl(key, contentType, size);
+
+  return {
+    success: true,
+    data: {
+      uploadUrl,
+      key,
+      filename,
+      contentType,
+      size,
+      visibility,
+    },
+  };
+}
+
+interface ConfirmUploadInput {
+  key: string;
+  filename: string;
+  contentType: string;
+  size: number;
+  visibility: FileVisibility;
+}
+
+/**
+ * Confirm that a file upload was completed successfully
+ * Verifies the file exists in R2, then creates the DB record
+ */
+export async function confirmUpload(
+  input: ConfirmUploadInput
+): Promise<
+  | { success: true; fileId: string; url: string | null }
+  | { success: false; error: string }
+> {
+  const session = await requireAuth();
+  const userId = session.user.id;
+
+  const { key, filename, contentType, size, visibility } = input;
+
+  // Validate key belongs to current user (format: {visibility}/{userId}/...)
+  const expectedPrefix = `${visibility}/${userId}/`;
+  if (!key.startsWith(expectedPrefix)) {
+    return { success: false, error: "Invalid file key" };
+  }
+
+  // Verify the file actually exists in R2
+  const exists = await fileExistsInR2(key);
+  if (!exists) {
+    return { success: false, error: "File not found in storage. Upload may have failed." };
+  }
+
+  // Create file record in database now that we know the file exists
   const fileId = crypto.randomUUID();
   await db.insert(file).values({
     id: fileId,
@@ -64,57 +120,20 @@ export async function requestUploadUrl(
     visibility,
   });
 
-  // Generate presigned upload URL
-  const uploadUrl = await getUploadUrl(key, contentType);
-
-  return {
-    success: true,
-    data: {
-      uploadUrl,
-      fileId,
-      key,
-    },
-  };
-}
-
-/**
- * Confirm that a file upload was completed successfully
- */
-export async function confirmUpload(
-  fileId: string
-): Promise<
-  | { success: true; url: string | null }
-  | { success: false; error: string }
-> {
-  const session = await requireAuth();
-  const userId = session.user.id;
-
-  // Get file record and verify ownership
-  const [fileRecord] = await db
-    .select()
-    .from(file)
-    .where(and(eq(file.id, fileId), eq(file.userId, userId), isNull(file.deletedAt)))
-    .limit(1);
-
-  if (!fileRecord) {
-    return { success: false, error: "File not found or access denied" };
-  }
-
   // Return the appropriate URL based on visibility
   const url =
-    fileRecord.visibility === "public"
-      ? getPublicUrl(fileRecord.key)
-      : await getDownloadUrl(fileRecord.key);
+    visibility === "public"
+      ? getPublicUrl(key)
+      : await getDownloadUrl(key);
 
-  return { success: true, url };
+  return { success: true, fileId, url };
 }
 
 /**
- * Delete a file (soft delete in DB, optionally hard delete from R2)
+ * Delete a file (hard delete: removes from R2 and DB)
  */
 export async function deleteFile(
-  fileId: string,
-  hardDelete: boolean = false
+  fileId: string
 ): Promise<{ success: true } | { success: false; error: string }> {
   const session = await requireAuth();
   const userId = session.user.id;
@@ -123,23 +142,16 @@ export async function deleteFile(
   const [fileRecord] = await db
     .select()
     .from(file)
-    .where(and(eq(file.id, fileId), eq(file.userId, userId), isNull(file.deletedAt)))
+    .where(and(eq(file.id, fileId), eq(file.userId, userId)))
     .limit(1);
 
   if (!fileRecord) {
     return { success: false, error: "File not found or access denied" };
   }
 
-  // Soft delete in database
-  await db
-    .update(file)
-    .set({ deletedAt: new Date() })
-    .where(eq(file.id, fileId));
-
-  // Optionally hard delete from R2
-  if (hardDelete) {
-    await deleteFromR2(fileRecord.key);
-  }
+  // Hard delete: R2 first, then DB
+  await deleteFromR2(fileRecord.key);
+  await db.delete(file).where(eq(file.id, fileId));
 
   return { success: true };
 }
@@ -160,7 +172,7 @@ export async function getFileUrl(
   const [fileRecord] = await db
     .select()
     .from(file)
-    .where(and(eq(file.id, fileId), isNull(file.deletedAt)))
+    .where(eq(file.id, fileId))
     .limit(1);
 
   if (!fileRecord) {
@@ -203,7 +215,7 @@ export async function getUserFiles(): Promise<
   const files = await db
     .select()
     .from(file)
-    .where(and(eq(file.userId, userId), isNull(file.deletedAt)))
+    .where(eq(file.userId, userId))
     .orderBy(file.uploadedAt);
 
   return { success: true, files };
