@@ -8,11 +8,26 @@ import { db } from "@/lib/db";
 import { user as userTable } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { PLANS, type PlanId } from "@/lib/plans";
+import { rateLimit } from "@/lib/rate-limit";
+
+const STRIPE_RATE_LIMIT = 5; // requests
+const STRIPE_RATE_WINDOW = 60 * 1000; // 1 minute
 
 export async function createCheckoutSession(planId: PlanId) {
   if (!(planId in PLANS)) throw new Error("Invalid plan");
 
   const session = await requireAuth();
+
+  const { success } = rateLimit(
+    `checkout:${session.user.id}`,
+    STRIPE_RATE_LIMIT,
+    STRIPE_RATE_WINDOW
+  );
+
+  if (!success) {
+    throw new Error("Too many requests. Please wait a moment and try again.");
+  }
+
   const plan = PLANS[planId];
 
   if (!plan.stripePriceId) {
@@ -60,6 +75,16 @@ export async function createBillingPortalSession() {
 
   if (!session.user.stripeCustomerId) {
     throw new Error("No Stripe customer found");
+  }
+
+  const { success } = rateLimit(
+    `billing:${session.user.id}`,
+    STRIPE_RATE_LIMIT,
+    STRIPE_RATE_WINDOW
+  );
+
+  if (!success) {
+    throw new Error("Too many requests. Please wait a moment and try again.");
   }
 
   try {

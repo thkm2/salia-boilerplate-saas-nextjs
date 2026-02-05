@@ -18,8 +18,8 @@
 [X] - SEO
 [X] - Améliorer claude.md avec les règles d'architecture (reuse -> shared, etc)
 [X] - Stripe test
-[] - Gestion de fichier avec Cloudflare R2 (s'inspirer de salia-invite) mais façon boilerplate
-[] - rate limiting
+[X] - Gestion de fichier avec Cloudflare R2 (s'inspirer de salia-invite) mais façon boilerplate
+[X] - rate limiting
 
 
 Workflow :
@@ -28,3 +28,8 @@ Workflow :
 3. Dev
 4. Test rapide
 5. Review
+
+
+.env var
+r2 cors + public url
+stripe billing portal (subscription change)

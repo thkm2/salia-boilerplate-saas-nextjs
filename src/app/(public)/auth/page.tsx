@@ -61,7 +61,16 @@ export default function AuthPage() {
 			callbackURL: "/dashboard",
 		});
 		if (error) {
-			toast.error("Failed to sign in with Google");
+			// Detect rate limit errors
+			const isRateLimit =
+				error.status === 429 ||
+				error.code === "TOO_MANY_REQUESTS" ||
+				error.message?.toLowerCase().includes("too many");
+			if (isRateLimit) {
+				toast.error("Trop de tentatives. Réessayez dans une minute.");
+			} else {
+				toast.error("Failed to sign in with Google");
+			}
 			console.error(error);
 			setIsLoading(false);
 		} else {
@@ -83,7 +92,15 @@ export default function AuthPage() {
 			callbackURL: "/dashboard",
 		});
 		if (error) {
-			toast.error("Failed to send magic link");
+			// Detect rate limit errors (status 429 or message contains "Too many")
+			const isRateLimit =
+				error.status === 429 ||
+				error.message?.toLowerCase().includes("too many");
+			if (isRateLimit) {
+				toast.error("Trop de tentatives. Réessayez dans une minute.");
+			} else {
+				toast.error("Failed to send magic link");
+			}
 			console.error(error);
 			setMagicLinkState("form");
 		} else {
