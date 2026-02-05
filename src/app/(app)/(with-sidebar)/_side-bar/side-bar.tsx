@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { List, LayoutDashboard, CircleDashed, BadgeQuestionMark } from "lucide-react";
+import { FileText, LayoutDashboard, CircleDashed, BadgeQuestionMark } from "lucide-react";
 import { NavMain } from "@/shared/components/sidebar/nav-main";
 // import { NavSecondary } from "@/shared/components/sidebar/nav-secondary";
 import { NavUser } from "./nav-user";
@@ -40,9 +40,9 @@ const data = {
 			icon: LayoutDashboard,
 		},
 		{
-			title: "Page",
-			url: "/page",
-			icon: List,
+			title: "Files",
+			url: "/files",
+			icon: FileText,
 		},
 	],
 	navSecondary: [
