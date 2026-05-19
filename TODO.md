@@ -21,6 +21,8 @@
 [X] - Gestion de fichier avec Cloudflare R2 (s'inspirer de salia-invite) mais façon boilerplate
 [X] - rate limiting
 
+[] - fichier r2 enlever notion public/private. Tout en publique mais avec url indevinable
+
 
 Workflow :
 1. Idée (questions, etc)
