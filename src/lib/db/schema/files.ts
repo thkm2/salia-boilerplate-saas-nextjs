@@ -10,6 +10,5 @@ export const file = pgTable("file", {
   filename: text("filename").notNull(), // Original filename
   contentType: text("contentType").notNull(), // MIME type
   size: integer("size").notNull(), // Size in bytes
-  visibility: text("visibility").notNull().default("private"), // "public" or "private"
   uploadedAt: timestamp("uploadedAt").notNull().defaultNow(),
 });

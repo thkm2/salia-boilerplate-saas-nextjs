@@ -7,12 +7,10 @@ import { eq, and } from "drizzle-orm";
 import {
   generateFileKey,
   getUploadUrl,
-  getDownloadUrl,
-  getPublicUrl,
+  buildPublicUrl,
   deleteFromR2,
   fileExistsInR2,
   validateFile,
-  type FileVisibility,
   type FileValidationOptions,
 } from "@/lib/r2";
 
@@ -20,7 +18,6 @@ interface RequestUploadUrlInput {
   filename: string;
   contentType: string;
   size: number;
-  visibility?: FileVisibility;
   validationOptions?: FileValidationOptions;
 }
 
@@ -30,7 +27,6 @@ interface RequestUploadUrlResult {
   filename: string;
   contentType: string;
   size: number;
-  visibility: FileVisibility;
 }
 
 /**
@@ -46,7 +42,7 @@ export async function requestUploadUrl(
   const session = await requireAuth();
   const userId = session.user.id;
 
-  const { filename, contentType, size, visibility = "private" } = input;
+  const { filename, contentType, size } = input;
 
   // Validate file metadata
   const validation = validateFile(contentType, size, input.validationOptions);
@@ -54,8 +50,8 @@ export async function requestUploadUrl(
     return { success: false, error: validation.error };
   }
 
-  // Generate unique key
-  const key = generateFileKey(userId, filename, visibility);
+  // Generate unguessable key (UUID v4-based)
+  const key = generateFileKey(userId, filename);
 
   // Generate presigned upload URL with size enforcement
   const uploadUrl = await getUploadUrl(key, contentType, size);
@@ -68,7 +64,6 @@ export async function requestUploadUrl(
       filename,
       contentType,
       size,
-      visibility,
     },
   };
 }
@@ -78,7 +73,6 @@ interface ConfirmUploadInput {
   filename: string;
   contentType: string;
   size: number;
-  visibility: FileVisibility;
 }
 
 /**
@@ -88,17 +82,16 @@ interface ConfirmUploadInput {
 export async function confirmUpload(
   input: ConfirmUploadInput
 ): Promise<
-  | { success: true; fileId: string; url: string | null }
+  | { success: true; fileId: string; url: string }
   | { success: false; error: string }
 > {
   const session = await requireAuth();
   const userId = session.user.id;
 
-  const { key, filename, contentType, size, visibility } = input;
+  const { key, filename, contentType, size } = input;
 
-  // Validate key belongs to current user (format: {visibility}/{userId}/...)
-  const expectedPrefix = `${visibility}/${userId}/`;
-  if (!key.startsWith(expectedPrefix)) {
+  // Validate key belongs to current user (format: {userId}/...)
+  if (!key.startsWith(`${userId}/`)) {
     return { success: false, error: "Invalid file key" };
   }
 
@@ -117,16 +110,9 @@ export async function confirmUpload(
     filename,
     contentType,
     size,
-    visibility,
   });
 
-  // Return the appropriate URL based on visibility
-  const url =
-    visibility === "public"
-      ? getPublicUrl(key)
-      : await getDownloadUrl(key);
-
-  return { success: true, fileId, url };
+  return { success: true, fileId, url: buildPublicUrl(key) };
 }
 
 /**
@@ -157,18 +143,19 @@ export async function deleteFile(
 }
 
 /**
- * Get the URL for accessing a file
+ * Get the public URL for accessing a file.
+ * Authorization is by ownership: only the owner can resolve a fileId to its URL.
+ * Once the URL is known, anyone with it can access the file (security by obscurity).
  */
 export async function getFileUrl(
   fileId: string
 ): Promise<
-  | { success: true; url: string; expiresAt?: Date }
+  | { success: true; url: string }
   | { success: false; error: string }
 > {
   const session = await requireAuth();
   const userId = session.user.id;
 
-  // Get file record
   const [fileRecord] = await db
     .select()
     .from(file)
@@ -179,27 +166,11 @@ export async function getFileUrl(
     return { success: false, error: "File not found" };
   }
 
-  // Check access: owner or public file
-  if (fileRecord.userId !== userId && fileRecord.visibility !== "public") {
+  if (fileRecord.userId !== userId) {
     return { success: false, error: "Access denied" };
   }
 
-  // Return URL based on visibility
-  if (fileRecord.visibility === "public") {
-    const publicUrl = getPublicUrl(fileRecord.key);
-    if (publicUrl) {
-      return { success: true, url: publicUrl };
-    }
-    // Fall back to presigned URL if public URL not configured
-    const url = await getDownloadUrl(fileRecord.key);
-    const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour
-    return { success: true, url, expiresAt };
-  }
-
-  // Private file: return presigned URL
-  const url = await getDownloadUrl(fileRecord.key);
-  const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour
-  return { success: true, url, expiresAt };
+  return { success: true, url: buildPublicUrl(fileRecord.key) };
 }
 
 /**

@@ -10,8 +10,6 @@ import {
   MoreVertical,
   Trash2,
   Eye,
-  Lock,
-  Globe,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -31,7 +29,6 @@ interface FileRecord {
   filename: string;
   contentType: string;
   size: number;
-  visibility: string;
   uploadedAt: Date;
 }
 
@@ -178,31 +175,11 @@ export function FileCard({ file, onDeleted }: FileCardProps) {
           </div>
         </div>
 
-        {/* Footer with date and visibility */}
-        <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-3">
+        {/* Footer with date */}
+        <div className="mt-4 border-t border-border/50 pt-3">
           <span className="text-xs text-muted-foreground">
             {formatDate(file.uploadedAt)}
           </span>
-          <div
-            className={cn(
-              "flex items-center gap-1 text-xs",
-              file.visibility === "public"
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-muted-foreground"
-            )}
-          >
-            {file.visibility === "public" ? (
-              <>
-                <Globe className="size-3" />
-                <span>Public</span>
-              </>
-            ) : (
-              <>
-                <Lock className="size-3" />
-                <span>Private</span>
-              </>
-            )}
-          </div>
         </div>
       </div>
 

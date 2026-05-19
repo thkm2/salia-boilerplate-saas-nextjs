@@ -50,7 +50,6 @@ export function FileUpload({ onUploaded, variant = "button" }: FileUploadProps) 
       filename: file.name,
       contentType: file.type,
       size: file.size,
-      visibility: "private",
     });
 
     if (!uploadResult.success) {
@@ -62,8 +61,7 @@ export function FileUpload({ onUploaded, variant = "button" }: FileUploadProps) 
 
     setUploadProgress(30);
 
-    const { uploadUrl, key, filename, contentType, size, visibility } =
-      uploadResult.data;
+    const { uploadUrl, key, filename, contentType, size } = uploadResult.data;
 
     // Step 2: Upload to R2
     try {
@@ -93,7 +91,6 @@ export function FileUpload({ onUploaded, variant = "button" }: FileUploadProps) 
       filename,
       contentType,
       size,
-      visibility,
     });
 
     setUploadProgress(100);

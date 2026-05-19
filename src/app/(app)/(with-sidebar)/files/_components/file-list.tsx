@@ -42,7 +42,6 @@ interface FileRecord {
   filename: string;
   contentType: string;
   size: number;
-  visibility: string;
   uploadedAt: Date;
 }
 
@@ -272,9 +271,6 @@ export function FileList({ files: initialFiles }: FileListProps) {
                       <div className="min-w-0">
                         <p className="truncate font-medium" title={file.filename}>
                           {file.filename}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {file.visibility === "public" ? "Public" : "Private"}
                         </p>
                       </div>
                     </div>

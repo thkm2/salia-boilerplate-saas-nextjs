@@ -9,8 +9,10 @@ R2_ACCOUNT_ID=your_account_id
 R2_ACCESS_KEY_ID=your_access_key
 R2_SECRET_ACCESS_KEY=your_secret_key
 R2_BUCKET_NAME=your_bucket_name
-R2_PUBLIC_URL=https://pub-xxx.r2.dev  # Optionnel, pour fichiers publics
+R2_PUBLIC_URL=https://pub-xxx.r2.dev  # Requis : bucket doit être public
 ```
+
+> **Important :** le bucket R2 doit être configuré en accès public (via `r2.dev` ou un domain custom). La sécurité repose sur l'unguessabilité de l'URL (UUID v4 dans la clé), pas sur des presigned URLs ou des ACL.
 
 ## Architecture
 
@@ -39,7 +41,7 @@ Client                    Server                     R2
 | `requestUploadUrl()` | Obtenir une URL signée pour upload |
 | `confirmUpload()` | Confirmer l'upload et créer l'entrée DB |
 | `deleteFile()` | Supprimer un fichier (R2 + DB) |
-| `getFileUrl()` | Obtenir l'URL d'accès à un fichier |
+| `getFileUrl()` | Obtenir l'URL publique d'un fichier (réservée au propriétaire) |
 | `getUserFiles()` | Lister tous les fichiers de l'utilisateur |
 
 ## Utilisation
@@ -51,13 +53,12 @@ Client                    Server                     R2
 
 import { requestUploadUrl, confirmUpload } from "@/shared/actions/files";
 
-async function uploadFile(file: File, visibility: "public" | "private" = "private") {
+async function uploadFile(file: File) {
   // 1. Demander une URL d'upload
   const request = await requestUploadUrl({
     filename: file.name,
     contentType: file.type,
     size: file.size,
-    visibility,
   });
 
   if (!request.success) {
@@ -79,7 +80,6 @@ async function uploadFile(file: File, visibility: "public" | "private" = "privat
     filename,
     contentType,
     size,
-    visibility,
   });
 
   if (!confirm.success) {
@@ -97,7 +97,6 @@ async function uploadFile(file: File, visibility: "public" | "private" = "privat
 
 import { useState } from "react";
 import { requestUploadUrl, confirmUpload } from "@/shared/actions/files";
-import { Button } from "@/shared/components/ui/button";
 
 export function FileUploader() {
   const [uploading, setUploading] = useState(false);
@@ -113,7 +112,6 @@ export function FileUploader() {
         filename: file.name,
         contentType: file.type,
         size: file.size,
-        visibility: "private",
       });
       if (!request.success) throw new Error(request.error);
 
@@ -181,8 +179,7 @@ async function displayFile(fileId: string) {
     return null;
   }
 
-  // result.url = URL d'accès (publique ou presigned)
-  // result.expiresAt = Date d'expiration (pour fichiers privés)
+  // result.url = URL publique permanente (CDN R2)
   return result.url;
 }
 ```
@@ -201,16 +198,9 @@ async function listFiles() {
   }
 
   return result.files;
-  // Chaque fichier: { id, key, filename, contentType, size, visibility, uploadedAt }
+  // Chaque fichier: { id, key, filename, contentType, size, uploadedAt }
 }
 ```
-
-## Visibilité des fichiers
-
-| Visibilité | Accès | URL |
-|------------|-------|-----|
-| `public` | Tout le monde | URL publique permanente (`R2_PUBLIC_URL/key`) |
-| `private` | Propriétaire uniquement | URL presigned (expire en 1h) |
 
 ## Validation
 
@@ -236,16 +226,20 @@ const result = await requestUploadUrl({
 ## Structure des clés R2
 
 ```
-{visibility}/{userId}/{timestamp}-{randomId}-{filename}
+{userId}/{uuid}-{filename}
 
-Exemples :
-- public/user_abc123/1699999999999-a1b2c3d4-photo.jpg
-- private/user_abc123/1699999999999-e5f6g7h8-document.pdf
+Exemple :
+  user_abc123/9f3a2c1e-7b4d-4f5a-8e6b-1d2c3f4a5b6c-photo.jpg
 ```
+
+L'UUID v4 fournit 122 bits d'entropie, ce qui rend l'URL impossible à deviner ou énumérer.
 
 ## Sécurité
 
-- Les fichiers privés ne sont accessibles qu'à leur propriétaire
-- Les URLs presigned expirent après 1 heure
-- La validation côté serveur empêche les uploads non autorisés
-- Le fichier doit exister dans R2 avant la création de l'entrée DB (pas de records orphelins)
+- **URL indevinable** : la sécurité repose sur le fait qu'un UUID v4 dans la clé est cryptographiquement impossible à deviner (pattern utilisé par Discord CDN, Notion, Dropbox).
+- **Bucket public** : le bucket R2 doit être configuré en accès public ; chaque fichier est servi via le CDN R2 sans presigned URL.
+- **Authorization côté server action** : seul le propriétaire peut résoudre un `fileId` en URL via `getFileUrl()`. Une fois l'URL connue, toute personne qui la possède peut accéder au fichier (à utiliser avec ce modèle de menace en tête).
+- **Validation côté serveur** : la taille et le content-type sont vérifiés avant de signer l'URL d'upload.
+- **Pas de records orphelins** : le fichier doit exister dans R2 avant la création de l'entrée DB.
+
+> **Ne pas utiliser ce modèle** pour des données sensibles (documents médicaux, factures clients, contrats RGPD). Dans ces cas, il faut un vrai contrôle d'accès avec presigned URLs courtes et auth check à chaque accès.

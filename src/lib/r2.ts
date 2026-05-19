@@ -3,12 +3,8 @@ import {
   DeleteObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
-  GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
-// Types
-export type FileVisibility = "public" | "private";
 
 export interface FileValidationOptions {
   allowedTypes: string[];
@@ -75,19 +71,15 @@ function getBucketName(): string {
 }
 
 /**
- * Generate a unique file key for R2 storage
+ * Generate a unique, unguessable file key for R2 storage.
+ * Format: {userId}/{uuid}-{sanitizedFilename}
+ * Security relies on the UUID v4 (122 bits of entropy), not on access control.
  */
-export function generateFileKey(
-  userId: string,
-  filename: string,
-  visibility: FileVisibility
-): string {
-  const timestamp = Date.now();
-  const randomSuffix = crypto.randomUUID().slice(0, 8);
+export function generateFileKey(userId: string, filename: string): string {
+  const uuid = crypto.randomUUID();
   const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, "_");
-  const prefix = visibility === "public" ? "public" : "private";
 
-  return `${prefix}/${userId}/${timestamp}-${randomSuffix}-${sanitizedFilename}`;
+  return `${userId}/${uuid}-${sanitizedFilename}`;
 }
 
 /**
@@ -110,27 +102,13 @@ export async function getUploadUrl(
 }
 
 /**
- * Get a presigned URL for downloading a private file from R2
+ * Build the direct public URL for a file in R2.
+ * Requires the bucket to be publicly accessible and R2_PUBLIC_URL configured.
  */
-export async function getDownloadUrl(
-  key: string,
-  expiresIn: number = 3600 // 1 hour default
-): Promise<string> {
-  const command = new GetObjectCommand({
-    Bucket: getBucketName(),
-    Key: key,
-  });
-
-  return getSignedUrl(getR2Client(), command, { expiresIn });
-}
-
-/**
- * Get the public URL for a file (only for public visibility files)
- */
-export function getPublicUrl(key: string): string | null {
+export function buildPublicUrl(key: string): string {
   const publicUrl = process.env.R2_PUBLIC_URL;
   if (!publicUrl) {
-    return null;
+    throw new Error("R2_PUBLIC_URL is not set");
   }
   return `${publicUrl}/${key}`;
 }
