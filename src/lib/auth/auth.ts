@@ -41,45 +41,59 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
+      // input: false → these fields can NEVER be set by the user via
+      // POST /api/auth/update-user. They are written server-side only
+      // (Stripe webhook, admin actions, databaseHooks), which bypasses
+      // the Better Auth input-parse layer. Prevents privilege escalation
+      // and free plan/credits self-assignment (mass-assignment).
       role: {
         type: "string",
         required: true,
         defaultValue: "user",
+        input: false,
       },
       plan: {
         type: "string",
         required: true,
         defaultValue: "free",
+        input: false,
       },
       credits: {
         type: "number",
         required: true,
         defaultValue: 0,
+        input: false,
       },
       firstLoginAt: {
         type: "date",
         required: false,
+        input: false,
       },
       lastLoginAt: {
         type: "date",
         required: false,
+        input: false,
       },
       stripeCustomerId: {
         type: "string",
         required: false,
+        input: false,
       },
       stripeSubscriptionId: {
         type: "string",
         required: false,
+        input: false,
       },
       creditsResetAt: {
         type: "date",
         required: false,
+        input: false,
       },
       paymentFailed: {
         type: "boolean",
         required: true,
         defaultValue: false,
+        input: false,
       },
     },
   },
